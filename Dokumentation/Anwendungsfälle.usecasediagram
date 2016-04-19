@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm4="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm10="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="999c1985-b5de-4a97-9f7a-d58aa1a8c8f1" name="Anwendungsfälle" linkedPackageId="60e95747-5943-4f04-a3f7-0cfb8f094816" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <profileInstances>
+    <packageHasProfileInstances Id="cb6456e2-4241-4197-b4cf-bf72d90ca916">
+      <profileInstance Id="29d13d11-acef-404e-a71e-d9cf50a68f8d" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="5e2fd2f0-c1ad-4911-86c9-c1fc1acabc6d">
+      <profileInstance Id="2bf4d350-af6b-4862-96fb-583332a45c7a" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="75e84317-f55d-4cde-ac44-9c4957d5aa56" name="Benutzer" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="864054fa-1931-4d0f-b4c2-24dbaaa57f4c" />
+        <suppliersInternal>
+          <dependency Id="92f82850-d262-4667-a78a-1a8e3f3da272">
+            <useCaseMoniker Id="f0b799ab-4d39-4d37-9ff6-c9f24d07c8ef" LastKnownName="Bewegungsbahnen aufzeichnen" />
+            <elementDefinition Id="7c464c1f-0370-458d-bae7-cb2f22508083" />
+          </dependency>
+          <dependency Id="a32a6550-a7a7-48dc-90ed-b2131c4949c2">
+            <useCaseMoniker Id="8b7009ff-82cd-4265-8a9e-b93ae9b7e2d4" LastKnownName="Bewegungsbahnen wiedergeben" />
+            <elementDefinition Id="3962b22d-fa30-45ab-9e87-d7cafb362b24" />
+          </dependency>
+          <dependency Id="a89a539c-2b72-445f-8991-2bf469a221a5">
+            <useCaseMoniker Id="6d99a8cf-fc44-41bf-989d-4f7a0857acb2" LastKnownName="Abschnitte von .. bis wählen" />
+            <elementDefinition Id="732e773a-e5a1-4776-89dc-6de53b717f6f" />
+          </dependency>
+          <dependency Id="4803907e-b70f-48c5-b37f-1055148c846c">
+            <useCaseMoniker Id="c0db67d1-f650-4a93-86ac-0b03cbf4f059" LastKnownName="Zeit seit Start überwachen" />
+            <elementDefinition Id="5d429a90-4116-4c7d-b300-8a9f9522d449" />
+          </dependency>
+          <dependency Id="1d923133-b07c-4bf1-b127-0de87896c4ee">
+            <useCaseMoniker Id="32175d48-c510-4814-bfe4-d0d3e4c424f7" LastKnownName="Abschnitte löschen" />
+            <elementDefinition Id="3916cfeb-33ce-47ee-b4a0-2493145a4536" />
+          </dependency>
+          <dependency Id="f8fbf1ba-42ba-45ae-a64f-26138889fc6d">
+            <useCaseMoniker Id="ef44dd04-8d61-48e1-8455-565988e49734" LastKnownName="Abschnitte zu Bewegungsbahnen hinzufügen" />
+            <elementDefinition Id="1529fbc0-f988-494a-a639-a11144c7b567" />
+          </dependency>
+          <dependency Id="d07723d9-6c84-4543-9357-3608b9704b6b">
+            <useCaseMoniker Id="b506a01b-c54c-4a01-959f-18fd504152b9" LastKnownName="Dateien speichern" />
+            <elementDefinition Id="b9f69f6b-48ef-435a-9841-425089ae0a45" />
+          </dependency>
+          <dependency Id="d34e682e-010a-4c30-9134-292d53866137">
+            <useCaseMoniker Id="f053d716-8714-4a93-9062-9dc3b90b53b1" LastKnownName="Dateien laden" />
+            <elementDefinition Id="1d1468fb-5e49-409b-8edf-31175b512b8c" />
+          </dependency>
+          <dependency Id="bfb61a45-7115-42f8-b0ff-15f3885bae14">
+            <useCaseMoniker Id="e5eb5628-6423-4876-a076-03f2fc9454e2" LastKnownName="Senden an externe Schnittstellen" />
+            <elementDefinition Id="166f04b7-1a24-49ac-82ce-bbdf544707aa" />
+          </dependency>
+        </suppliersInternal>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <subsystem Id="ee41282f-1207-4f75-b11f-b50dac1d1132" name="Motion Teach-In" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="eaf5f1f5-56ac-415e-94c4-1a0c193b87fa" />
+      </subsystem>
+    </useCaseModelRootHasTypes>
+    <packageHasNamedElement>
+      <useCase Id="f0b799ab-4d39-4d37-9ff6-c9f24d07c8ef" name="Bewegungsbahnen aufzeichnen" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="12a3f4e8-33d9-4ede-8c92-9aaffb6ff749" />
+        <additions>
+          <include Id="2bc7000e-cd04-4e1f-a382-6a10a9b56222">
+            <useCaseMoniker Id="c0db67d1-f650-4a93-86ac-0b03cbf4f059" LastKnownName="Zeit seit Start überwachen" />
+            <elementDefinition Id="c007be62-f072-440a-8555-4b2c3d614256" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="8b7009ff-82cd-4265-8a9e-b93ae9b7e2d4" name="Bewegungsbahnen wiedergeben" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="433336f9-8f7d-44b2-b7d6-b106c7a5808a" />
+        <additions>
+          <include Id="a70f89da-0f5d-4a22-b4c9-d0a041b84cfc">
+            <useCaseMoniker Id="c0db67d1-f650-4a93-86ac-0b03cbf4f059" LastKnownName="Zeit seit Start überwachen" />
+            <elementDefinition Id="092f2373-09dc-4c1e-988d-8882a635f47f" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="6d99a8cf-fc44-41bf-989d-4f7a0857acb2" name="Abschnitte von .. bis wählen" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="970facfe-d464-4d14-89f5-c35bf74c6fb3" />
+        <additions>
+          <include Id="1d159fd8-c089-4f25-a5f6-e46ead222eae">
+            <useCaseMoniker Id="8b7009ff-82cd-4265-8a9e-b93ae9b7e2d4" LastKnownName="Bewegungsbahnen wiedergeben" />
+            <elementDefinition Id="3cd7116b-fc45-4caf-9c84-78631e5b8138" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="c0db67d1-f650-4a93-86ac-0b03cbf4f059" name="Zeit seit Start überwachen" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c1042fb7-9601-4d64-b81a-c94f9edc39b9" />
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="32175d48-c510-4814-bfe4-d0d3e4c424f7" name="Abschnitte löschen" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b2ad009f-a5a6-4028-afb4-6800b38acb20" />
+        <additions>
+          <include Id="3730c89b-8518-4693-b09e-5e6cbde700ee">
+            <useCaseMoniker Id="6d99a8cf-fc44-41bf-989d-4f7a0857acb2" LastKnownName="Abschnitte von .. bis wählen" />
+            <elementDefinition Id="c2031925-a298-49af-a3ab-756f9463ad80" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="ef44dd04-8d61-48e1-8455-565988e49734" name="Abschnitte zu Bewegungsbahnen hinzufügen" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="1a02cf39-2d5d-407c-9adb-d0955f5eabb0" />
+        <extendedCases>
+          <extend Id="f6053a5c-1ab5-4757-a9cf-0c4e101fcb88">
+            <useCaseMoniker Id="f0b799ab-4d39-4d37-9ff6-c9f24d07c8ef" LastKnownName="Bewegungsbahnen aufzeichnen" />
+            <elementDefinition Id="058d8e93-db3d-46d1-8aa3-c804d8507ad6" />
+          </extend>
+          <extend Id="e98f5837-aed4-4a17-b916-06cb9c27ceaf">
+            <useCaseMoniker Id="6d99a8cf-fc44-41bf-989d-4f7a0857acb2" LastKnownName="Abschnitte von .. bis wählen" />
+            <elementDefinition Id="9f881d6e-749a-4fed-bfab-0d780d4a2866" />
+          </extend>
+        </extendedCases>
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="b506a01b-c54c-4a01-959f-18fd504152b9" name="Dateien speichern" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="37ebd03d-c940-4e22-b01a-50646713e88f" />
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="f053d716-8714-4a93-9062-9dc3b90b53b1" name="Dateien laden" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="e1650c69-d36f-45b9-9b7b-e7479f5207bf" />
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="e5eb5628-6423-4876-a076-03f2fc9454e2" name="Senden an externe Schnittstellen" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="0ca78f01-e907-4c3b-a305-bbd8f77ab334" />
+        <extendedCases>
+          <extend Id="2df51581-65c2-4758-80b5-3d9a6e02baa3">
+            <useCaseMoniker Id="8b7009ff-82cd-4265-8a9e-b93ae9b7e2d4" LastKnownName="Bewegungsbahnen wiedergeben" />
+            <elementDefinition Id="4502f205-1b6f-4b42-bc93-54ac1cbcf7cc" />
+          </extend>
+        </extendedCases>
+        <additions>
+          <include Id="f9f55837-934c-4cd2-8391-55b688582fdc">
+            <useCaseMoniker Id="d7a86b5d-6b63-4ae1-9318-cd731f10a36a" LastKnownName="XY- und Zeitwerte skallieren" />
+            <elementDefinition Id="858b3fcd-1363-4577-bf77-35dd6660ce13" />
+          </include>
+        </additions>
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase Id="d7a86b5d-6b63-4ae1-9318-cd731f10a36a" name="XY- und Zeitwerte skallieren" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="f058ec91-2b7b-40cb-a03f-034d9cf095e2" />
+        <subjects>
+          <subsystemMoniker Id="ee41282f-1207-4f75-b11f-b50dac1d1132" LastKnownName="Motion Teach-In" />
+        </subjects>
+      </useCase>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="60e95747-5943-4f04-a3f7-0cfb8f094816" name="Dokumentation">
+    <elementDefinition Id="66e84f42-cded-4055-a898-bc79e69e50bf" />
+  </package>
+</useCaseModelRoot>
