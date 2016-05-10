@@ -1,13 +1,13 @@
 ﻿namespace Motion_Teach_In
 {
-    partial class frmMain
+    partial class Zeichenfläche
     {
-        /// <summary>
+        /// <summary> 
         /// Erforderliche Designervariable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Verwendete Ressourcen bereinigen.
         /// </summary>
         /// <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
@@ -20,40 +20,32 @@
             base.Dispose(disposing);
         }
 
-        #region Vom Windows Form-Designer generierter Code
+        #region Vom Komponenten-Designer generierter Code
 
-        /// <summary>
-        /// Erforderliche Methode für die Designerunterstützung.
+        /// <summary> 
+        /// Erforderliche Methode für die Designerunterstützung. 
         /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
         /// </summary>
         private void InitializeComponent()
         {
-            this.zeichenfläche1 = new Motion_Teach_In.Zeichenfläche();
             this.SuspendLayout();
             // 
-            // zeichenfläche1
-            // 
-            this.zeichenfläche1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.zeichenfläche1.Location = new System.Drawing.Point(109, 99);
-            this.zeichenfläche1.Name = "zeichenfläche1";
-            this.zeichenfläche1.Size = new System.Drawing.Size(363, 220);
-            this.zeichenfläche1.TabIndex = 0;
-            // 
-            // frmMain
+            // Zeichenfläche
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 402);
-            this.Controls.Add(this.zeichenfläche1);
-            this.Name = "frmMain";
-            this.Text = "Motion Teach-In";
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Name = "Zeichenfläche";
+            this.Size = new System.Drawing.Size(719, 403);
+            this.Load += new System.EventHandler(this.Zeichenfläche_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Zeichenfläche_Paint);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Zeichenfläche_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Zeichenfläche_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Zeichenfläche_MouseUp);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private Zeichenfläche zeichenfläche1;
     }
 }
-
