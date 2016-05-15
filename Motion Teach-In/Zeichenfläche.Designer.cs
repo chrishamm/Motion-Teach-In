@@ -28,15 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.Radiergummi = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // Radiergummi
+            // 
+            this.Radiergummi.BackColor = System.Drawing.Color.Transparent;
+            this.Radiergummi.Location = new System.Drawing.Point(3, 3);
+            this.Radiergummi.Name = "Radiergummi";
+            this.Radiergummi.Size = new System.Drawing.Size(75, 51);
+            this.Radiergummi.TabIndex = 0;
+            this.Radiergummi.Text = "Löschen";
+            this.Radiergummi.UseVisualStyleBackColor = false;
+            this.Radiergummi.Click += new System.EventHandler(this.Radiergummi_Click);
             // 
             // Zeichenfläche
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BackColor = System.Drawing.Color.Green;
+            this.Controls.Add(this.Radiergummi);
             this.Name = "Zeichenfläche";
-            this.Size = new System.Drawing.Size(719, 403);
+            this.Size = new System.Drawing.Size(567, 403);
             this.Load += new System.EventHandler(this.Zeichenfläche_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Zeichenfläche_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Zeichenfläche_MouseDown);
@@ -47,5 +60,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Button Radiergummi;
     }
 }

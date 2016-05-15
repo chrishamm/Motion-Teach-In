@@ -33,17 +33,17 @@
             // 
             // zeichenfläche1
             // 
-            this.zeichenfläche1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.zeichenfläche1.Location = new System.Drawing.Point(109, 99);
+            this.zeichenfläche1.BackColor = System.Drawing.Color.Green;
+            this.zeichenfläche1.Location = new System.Drawing.Point(142, 12);
             this.zeichenfläche1.Name = "zeichenfläche1";
-            this.zeichenfläche1.Size = new System.Drawing.Size(363, 220);
+            this.zeichenfläche1.Size = new System.Drawing.Size(709, 378);
             this.zeichenfläche1.TabIndex = 0;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 402);
+            this.ClientSize = new System.Drawing.Size(1070, 402);
             this.Controls.Add(this.zeichenfläche1);
             this.Name = "frmMain";
             this.Text = "Motion Teach-In";

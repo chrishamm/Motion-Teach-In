@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 
 namespace Motion_Teach_In
 {
@@ -20,7 +22,12 @@ namespace Motion_Teach_In
 
        public static bool m_Drawing;
        public static List<List<Point>> m_Points;
-       public static Stopwatch Stoppuhr = new Stopwatch();
+        //public static List<List<Point>> m_Points_löschen;
+        public static Stopwatch Stoppuhr = new Stopwatch();
+        public static bool löschen = false;
+        public  List<List<int>> Bewegung = new List<List<int>>();
+        
+       
         
         
 
@@ -28,6 +35,7 @@ namespace Motion_Teach_In
         {
             Timer timer = new Timer();
             m_Points = new List<List<Point>>();
+           // m_Points.Add(new List<Point>());
             this.DoubleBuffered = true;
             this.MouseDown += new MouseEventHandler(Zeichenfläche_MouseDown);
             this.MouseUp += new MouseEventHandler(Zeichenfläche_MouseUp);
@@ -41,16 +49,24 @@ namespace Motion_Teach_In
         
         private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)
         {
-            m_Points.Add(new List<Point>());
+            if (!löschen)
+            {
+                m_Points.Add(new List<Point>());
+            }
             m_Drawing = true;
             Stoppuhr.Start();
-            
+            Bewegung.Add(new List<int>()); // index 1 = x-werte;
+            Bewegung.Add(new List<int>()); // index 2 = y-werte;
+            Bewegung.Add(new List<int>()); // index 3 = v-werte;
+
+
         }
 
         private void Zeichenfläche_MouseUp(object sender, MouseEventArgs e)
         {
             m_Drawing = false;
             Stoppuhr.Reset();
+           
         }
 
         private void Zeichenfläche_MouseMove(object sender, MouseEventArgs e)
@@ -60,36 +76,98 @@ namespace Motion_Teach_In
             
             
 
-            if (m_Drawing  )
+            if (m_Drawing && !löschen )
             {
                 m_Points[m_Points.Count - 1].Add(e.Location);
 
-                TimeSpan vergangene_zeit = Stoppuhr.Elapsed;
+             /*   TimeSpan vergangene_zeit = Stoppuhr.Elapsed;
                int vergangene_zeit_absolut = (int) vergangene_zeit.TotalMilliseconds;
                 int interval = vergangene_zeit_absolut % 10;
 
                 if (interval == 0)
                 {
-                    using (System.IO.StreamWriter file =
-                    new System.IO.StreamWriter(@"C:\Users\Public\Koordinaten.txt", true))
-                    {
-
-                        file.WriteLine(e.Location.X + "," + e.Location.Y + "," + vergangene_zeit_absolut);
-                    }
-                }
+                    Bewegung[0].Add(e.Location.X);
+                    Bewegung[1].Add(e.Location.Y);
+                 
+                }*/
                 
                 
                 this.Refresh();
             }
             
+
+
+            if (m_Drawing && löschen)
+
+            {
+                
+             //  List<Point> temp_list = new List<Point>();
+               // temp_list.Add(e.Location);
+                
+
+               for (int i = 0; i<= m_Points.Count-1;i++)
+               {
+
+                   for (int y = 0; y <= m_Points[i].Count - 1; y++)
+                   {
+                       if (m_Points[i][y] == e.Location)
+                       {
+                            //MessageBox.Show("eintrag");
+                            m_Points[i].RemoveAt(y);
+                            
+                           
+                            this.Refresh();
+                        }
+                   }
+           
+                
+                }
+             
+            
+                //this.Refresh();
+            }
+            
+            
         }
 
         private void Zeichenfläche_Paint(object sender, PaintEventArgs e)
         {
+
+            Brush aBrush = (Brush)Brushes.Black;
+            Graphics g = this.CreateGraphics();
+
+            
+
+
             foreach (List<Point> points in m_Points)
+            {// if (points.Count > 1)
+             //  e.Graphics.DrawLines(new Pen(new SolidBrush(Color.Black), 10), points.ToArray());
+                foreach (Point punkt in points)
+                {
+                    g.FillRectangle(aBrush, punkt.X, punkt.Y, 3, 3);
+                   
+                }
+            }
+
+         
+
+
+
+        }
+        
+       
+
+
+        private void Radiergummi_Click(object sender, EventArgs e)
+        {
+            if (löschen == false)
             {
-                if (points.Count > 1)
-                    e.Graphics.DrawLines(new Pen(new SolidBrush(Color.Black), 2), points.ToArray());
+                löschen = true;
+            }
+            else
+            {
+                löschen = false;
+                m_Drawing = false;
             }
         }
     }
