@@ -1,16 +1,16 @@
 ﻿namespace Motion_Teach_In
 {
-    partial class frmMain
+    partial class Testumgebung
     {
         /// <summary>
-        /// Erforderliche Designervariable.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Verwendete Ressourcen bereinigen.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,11 +20,11 @@
             base.Dispose(disposing);
         }
 
-        #region Vom Windows Form-Designer generierter Code
+        #region Windows Form Designer generated code
 
         /// <summary>
-        /// Erforderliche Methode für die Designerunterstützung.
-        /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -35,14 +35,14 @@
             // zeichenfläche1
             // 
             this.zeichenfläche1.BackColor = System.Drawing.Color.Green;
-            this.zeichenfläche1.Location = new System.Drawing.Point(142, 12);
+            this.zeichenfläche1.Location = new System.Drawing.Point(132, 80);
             this.zeichenfläche1.Name = "zeichenfläche1";
-            this.zeichenfläche1.Size = new System.Drawing.Size(709, 378);
+            this.zeichenfläche1.Size = new System.Drawing.Size(567, 403);
             this.zeichenfläche1.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(965, 53);
+            this.button1.Location = new System.Drawing.Point(740, 57);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -50,15 +50,15 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // frmMain
+            // Testumgebung
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1070, 402);
+            this.ClientSize = new System.Drawing.Size(863, 520);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.zeichenfläche1);
-            this.Name = "frmMain";
-            this.Text = "Motion Teach-In";
+            this.Name = "Testumgebung";
+            this.Text = "Testumgebung";
             this.ResumeLayout(false);
 
         }
@@ -69,4 +69,3 @@
         private System.Windows.Forms.Button button1;
     }
 }
-

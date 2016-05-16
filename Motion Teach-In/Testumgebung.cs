@@ -10,18 +10,16 @@ using System.Windows.Forms;
 
 namespace Motion_Teach_In
 {
-    public partial class frmMain : Form
+    public partial class Testumgebung : Form
     {
-        public frmMain()
+        public Testumgebung()
         {
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            zeichenfläche1.Wiedergabe(zeichenfläche1.arbeits_kopie);
-            
+            Logik.erzeuge_DB();
         }
     }
 }
