@@ -98,11 +98,44 @@ namespace Motion_Teach_In
 
             if (zeichnen_aktiv && löschen)                                                                 //wird aktiv, wenn der Radiergummie gewählt wurde und die maus gedrückt ist
             {
+                Point fünf = e.Location;                                                                //punkt-elemente werden eingeführt, um einen Lösch-Bereich zu haben
+                                                                                                        //sollte man unter dem phänomen der wurstfinger leiden.
+                Point vier = fünf;
+                vier.X = fünf.X-1;
+
+                Point sechs = fünf;
+                sechs.X = e.Location.X +1;
+
+                Point eins = fünf;
+                eins.X = fünf.X - 1;
+                eins.Y = fünf.Y + 1;
+
+                Point zwei = fünf;
+                eins.Y = fünf.Y + 1;
+
+                Point drei = fünf;
+                eins.X = fünf.X + 1;
+                eins.Y = fünf.Y + 1;
+
+                Point sieben = fünf;
+                eins.X = fünf.X - 1;
+                eins.Y = fünf.Y -1;
+
+                Point acht = fünf;
+                
+                eins.Y = fünf.Y - 1;
+
+                Point neun = fünf;
+                eins.X = fünf.X + 1;
+                eins.Y = fünf.Y - 1;
+
+
+
                 for (int i = 0; i <= arbeits_kopie.Count - 1; i++)
                 {
                     for (int y = 0; y <= arbeits_kopie[i].Count - 1; y++)
                     {
-                        if (arbeits_kopie[i][y].Punkt == e.Location)                                         //durchsuch die koordinaten-listen nach der aktuellen Mauszeigerposition und löscht diese
+                        if (arbeits_kopie[i][y].Punkt == fünf || arbeits_kopie[i][y].Punkt == eins || arbeits_kopie[i][y].Punkt == zwei || arbeits_kopie[i][y].Punkt == drei || arbeits_kopie[i][y].Punkt == vier || arbeits_kopie[i][y].Punkt == sechs || arbeits_kopie[i][y].Punkt == sieben || arbeits_kopie[i][y].Punkt == acht || arbeits_kopie[i][y].Punkt == neun )                                         //durchsuch die koordinaten-listen nach der aktuellen Mauszeigerposition und löscht diese
                         {
                             arbeits_kopie[i].RemoveAt(y);
                             #region unfertige aufteilung der listen
@@ -156,6 +189,7 @@ namespace Motion_Teach_In
                 }
             }
             g.Dispose();
+            unabhängige_zeit = 0;
         }
 
 
