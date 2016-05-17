@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
+using System.Threading;
 
 
 namespace Motion_Teach_In
@@ -18,18 +21,23 @@ namespace Motion_Teach_In
         public static bool zeichnen_aktiv;
         public static bool wiedergeben_aktiv = false;
         public static bool löschen = false;
-        public  List<List<Point>> arbeits_kopie;     
+        public static bool zähler = true;
+        
+       // public  List<List<Point>> arbeits_kopie;
+        public List<List<Koordinaten>>  arbeits_kopie;
         public static Stopwatch Stoppuhr = new Stopwatch();
+        public long unabhängige_zeit = 0;
         
 #endregion
 
 
-
+        
 
         private void Zeichenfläche_Load(object sender, EventArgs e)
         {
             
-            arbeits_kopie = new List<List<Point>>();       
+          //  arbeits_kopie = new List<List<Point>>();   
+              arbeits_kopie = new List<List<Koordinaten>>();
             this.DoubleBuffered = true;
             this.MouseDown += new MouseEventHandler(Zeichenfläche_MouseDown);
             this.MouseUp += new MouseEventHandler(Zeichenfläche_MouseUp);
@@ -39,11 +47,14 @@ namespace Motion_Teach_In
 
         private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!löschen)
+            if (!löschen && zähler)
             {
-                arbeits_kopie.Add(new List<Point>());
+               // arbeits_kopie.Add(new List<Point>());
+               arbeits_kopie.Add(new List<Koordinaten>());
                 
                 Stoppuhr.Start();
+                zähler = false;
+                
             }
             zeichnen_aktiv = true;
 
@@ -58,33 +69,31 @@ namespace Motion_Teach_In
 
         private void Zeichenfläche_MouseMove(object sender, MouseEventArgs e)
         {
-
+            zähler = true;
+            
             if (zeichnen_aktiv && !löschen)
             {
-                arbeits_kopie[arbeits_kopie.Count - 1].Add(e.Location);
-                #region unfertige zeit
-                /* TimeSpan vergangene_zeit = Stoppuhr.Elapsed;
-                int vergangene_zeit_absolut = (int) vergangene_zeit.TotalMilliseconds;
-                 int interval = vergangene_zeit_absolut % 10;
+                // arbeits_kopie[arbeits_kopie.Count - 1].Add(e.Location);
+                
+                Koordinaten koord = new Koordinaten();
+               arbeits_kopie[arbeits_kopie.Count-1].Add(koord);
+               int index = arbeits_kopie[arbeits_kopie.Count - 1].Count;
+               arbeits_kopie[arbeits_kopie.Count -1][index-1].Punkt = e.Location;
+                long  zeit =  Stoppuhr.ElapsedMilliseconds;
+                arbeits_kopie[arbeits_kopie.Count - 1][index - 1].vergangegene_zeit = zeit;
 
-                 if (interval == 0)
-                 {
-
-
-                 }*/
-
-#endregion
+                
                 Refresh();
             }
 
 
             if (zeichnen_aktiv && löschen)
             {
-                for (int i = 0; i <= arbeits_kopie.Count - 1; i++)
+                for (int i = 0; i <= arbeits_kopie.Count - 1; i++) //ändern
                 {
                     for (int y = 0; y <= arbeits_kopie[i].Count - 1; y++)
                     {
-                        if (arbeits_kopie[i][y] == e.Location)
+                        if (arbeits_kopie[i][y].Punkt == e.Location)
                         {
                             arbeits_kopie[i].RemoveAt(y);
                             #region unfertige aufteilung der listen
@@ -100,6 +109,8 @@ namespace Motion_Teach_In
                             }
                             arbeits_kopie.RemoveAt(i);*/
                             #endregion
+
+                            
                             Refresh();
                        
                         }
@@ -114,24 +125,36 @@ namespace Motion_Teach_In
             
             Brush pinsel = (Brush)Brushes.Black;
             Graphics g = this.CreateGraphics();
+            
+            
 
-            foreach (List<Point> points in arbeits_kopie)
-            {
-                
-                foreach (Point punkt in points)
+                foreach (List<Koordinaten> points in arbeits_kopie)
                 {
-                    if (!wiedergeben_aktiv)
+
+                    foreach (Koordinaten punkt in points)
                     {
-                        g.FillRectangle(pinsel, punkt.X, punkt.Y, 2, 2);
+                        long zeit = punkt.vergangegene_zeit;
+
+                        if (!wiedergeben_aktiv)
+                        {
+                            g.FillRectangle(pinsel, punkt.Punkt.X, punkt.Punkt.Y, 2, 2);
+                        }
+                        else
+                        {
+                            g.FillRectangle(pinsel, punkt.Punkt.X + 50, punkt.Punkt.Y + 50, 2, 2);
+
+                            Thread.Sleep((int) (zeit - unabhängige_zeit));
+                            unabhängige_zeit = zeit;
+
+                        }
                     }
-                    else 
-                    {
-                        g.FillRectangle(pinsel, punkt.X+50, punkt.Y+50, 2, 2); //dient nur zum testen, damit es nicht zu überlagerungen zwischen original und wiedergabe kommt
-                    }
-                }
+                
+                
             }
             g.Dispose();
             
+
+
         }
 
 
@@ -152,14 +175,17 @@ namespace Motion_Teach_In
             }
         }
 
-        public  void Wiedergabe(List<List<Point>> kohledurchschlag)
+        public  void Wiedergabe()
         {
             wiedergeben_aktiv = true;
             
             Refresh();
-            wiedergeben_aktiv = false;
-         
            
+            wiedergeben_aktiv = false;
+
+
+
+
         }
     // if (points.Count > 1)
     //  e.Graphics.DrawLines(new Pen(new SolidBrush(Color.Black), 10), points.ToArray());

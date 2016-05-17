@@ -20,7 +20,7 @@ namespace Motion_Teach_In
         private void button1_Click(object sender, EventArgs e)
         {
             
-            zeichenfläche1.Wiedergabe(zeichenfläche1.arbeits_kopie);
+            zeichenfläche1.Wiedergabe();
             
         }
     }
