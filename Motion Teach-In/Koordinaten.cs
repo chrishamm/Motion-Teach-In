@@ -9,7 +9,7 @@ namespace Motion_Teach_In
 {
     public class Koordinaten
     {
-        public long vergangegene_zeit { get; set; }
-        public Point Punkt { get; set; }
+        public long VergangeneZeit { get; set; } // Zeit in ms 
+        public Point Punkt { get; set; } //punkt der die Koordinaten 
     }
 }

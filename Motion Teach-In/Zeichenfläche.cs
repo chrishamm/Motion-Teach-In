@@ -21,7 +21,7 @@ namespace Motion_Teach_In
         public static bool zeichnen_aktiv;                                                          //schalter um zeichnen zu ermöglichen            
         public static bool wiedergeben_aktiv = false;                                               //schalter um wiedergabe zu ermöglichen
         public static bool löschen = false;                                                         //schalter um löschen zu ermöglichen
-        public static bool zähler = true;                                                           //schalter, weil mouse_down sich doppelt aufruft.
+        //public static bool zähler = true;                                                           //schalter, weil mouse_down sich doppelt aufruft.
         public List<List<Koordinaten>> arbeits_kopie;                                               //Globale Listen-Liste auf der opperiert wird
         public static Stopwatch Stoppuhr = new Stopwatch();                                         //Stopuhr zum erfassen der zeit zwischen den einzellnen punkten
         public long unabhängige_zeit = 0;                                                           //zwischenspeicher-variable für die Zeit
@@ -37,19 +37,16 @@ namespace Motion_Teach_In
 
             arbeits_kopie = new List<List<Koordinaten>>();                                              //Erstellen der Events und der initialen Listen-Liste
             this.DoubleBuffered = true;
-            this.MouseDown += new MouseEventHandler(Zeichenfläche_MouseDown);
-            this.MouseUp += new MouseEventHandler(Zeichenfläche_MouseUp);
-            this.MouseMove += new MouseEventHandler(Zeichenfläche_MouseMove);
-            this.Paint += new PaintEventHandler(Zeichenfläche_Paint);
+           
         }
 
         private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)//Event wird ausgelöst wenn die Maus gedrückt wird (quasi initial-zündung)
         {
-            if (!löschen && zähler)
+            if (!löschen)
             {
                 arbeits_kopie.Add(new List<Koordinaten>());
                 Stoppuhr.Start();
-                zähler = false;
+                //zähler = false;
             }
             zeichnen_aktiv = true;
         }
@@ -62,7 +59,7 @@ namespace Motion_Teach_In
 
         private void Zeichenfläche_MouseMove(object sender, MouseEventArgs e)//Event wird ausgelöst, wenn die Maus bewegt wird
         {
-            zähler = true;
+            //zähler = true;
 
             if (zeichnen_aktiv && !löschen)                                                                //ist das zeichnen ermöglicht und will man nicht löschen, werden hier die mauskoord. gesammelt und sortiert
             {
@@ -78,7 +75,7 @@ namespace Motion_Teach_In
                 {                                                                                          //2 Punkte gibt, wird der Punkt-Wert und der zeitwert übernommen
                     arbeits_kopie[index_außen - 1][index_innen - 1].Punkt = e.Location;
                     long zeit = Stoppuhr.ElapsedMilliseconds;
-                    arbeits_kopie[index_außen - 1][index_innen - 1].vergangegene_zeit = zeit;
+                    arbeits_kopie[index_außen - 1][index_innen - 1].VergangeneZeit = zeit;
                 }
 
                 if (index_innen >= 2 && arbeits_kopie[index_außen - 1][index_innen - 2].Punkt == e.Location)//wenn der letzte punkt gleich dem potentiellen neuen punkt ist wird die neueste koordinate gelöscht
@@ -90,7 +87,7 @@ namespace Motion_Teach_In
                 {
                     arbeits_kopie[index_außen - 1][index_innen - 1].Punkt = e.Location;
                     long zeit = Stoppuhr.ElapsedMilliseconds;
-                    arbeits_kopie[index_außen - 1][index_innen - 1].vergangegene_zeit = zeit;
+                    arbeits_kopie[index_außen - 1][index_innen - 1].VergangeneZeit = zeit;
                 }
                 Refresh();
             }
@@ -173,7 +170,7 @@ namespace Motion_Teach_In
 
                 foreach (Koordinaten punkt in points)
                 {
-                    long zeit = punkt.vergangegene_zeit;
+                    long zeit = punkt.VergangeneZeit;
 
                     if (!wiedergeben_aktiv)
                     {
