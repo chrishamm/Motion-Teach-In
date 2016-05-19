@@ -61,5 +61,75 @@ namespace Motion_Teach_In
             tsbStop.Enabled = false;
         }
         #endregion
+
+        #region Dateioperationen
+        private bool DarfDateiVeraendern()
+        {
+            if (zflInhalt.Datei.Veraendert)
+            {
+                DialogResult res = MessageBox.Show("Diese Datei ist verändert worden.\n\nMöchten Sie Ihre Änderungen speichern?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (res == DialogResult.Yes)
+                {
+                    if (sfdDatei.ShowDialog() == DialogResult.OK)
+                    {
+                        zflInhalt.Datei.Speichern(sfdDatei.FileName);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (res == DialogResult.Cancel)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void mnuNeu_Click(object sender, EventArgs e)
+        {
+            if (DarfDateiVeraendern())
+            {
+                zflInhalt.Datei = new Datei();
+            }
+        }
+
+        private void mnuÖffnen_Click(object sender, EventArgs e)
+        {
+            if (DarfDateiVeraendern() && ofdDatei.ShowDialog() == DialogResult.OK)
+            {
+                zflInhalt.Datei = new Datei(ofdDatei.FileName);
+            }
+        }
+
+        private void mnuSpeichern_Click(object sender, EventArgs e)
+        {
+            if (zflInhalt.Datei.Dateiname != "")
+            {
+                zflInhalt.Datei.Speichern();
+            }
+            else
+            {
+                mnuSpeichernUnter.PerformClick();
+            }
+        }
+
+        private void mnuSpeichernUnter_Click(object sender, EventArgs e)
+        {
+            if (sfdDatei.ShowDialog() == DialogResult.OK)
+            {
+                zflInhalt.Datei.Speichern(sfdDatei.FileName);
+            }
+        }
+        #endregion
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!DarfDateiVeraendern())
+            {
+                e.Cancel = true;
+            }
+        }
     }
 }
