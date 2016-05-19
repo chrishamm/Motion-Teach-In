@@ -75,7 +75,7 @@ namespace Motion_Teach_In
                 {                                                                                          //2 Punkte gibt, wird der Punkt-Wert und der zeitwert übernommen
                     arbeits_kopie[index_außen - 1][index_innen - 1].Punkt = e.Location;
                     long zeit = Stoppuhr.ElapsedMilliseconds;
-                    arbeits_kopie[index_außen - 1][index_innen - 1].vergangegene_zeit = zeit;
+                    arbeits_kopie[index_außen - 1][index_innen - 1].VergangeneZeit = zeit;
                 }
 
                 if (index_innen >= 2 && arbeits_kopie[index_außen - 1][index_innen - 2].Punkt == e.Location)//wenn der letzte punkt gleich dem potentiellen neuen punkt ist wird die neueste koordinate gelöscht
@@ -87,7 +87,7 @@ namespace Motion_Teach_In
                 {
                     arbeits_kopie[index_außen - 1][index_innen - 1].Punkt = e.Location;
                     long zeit = Stoppuhr.ElapsedMilliseconds;
-                    arbeits_kopie[index_außen - 1][index_innen - 1].vergangegene_zeit = zeit;
+                    arbeits_kopie[index_außen - 1][index_innen - 1].VergangeneZeit = zeit;
                 }
                 Refresh();
             }
@@ -95,79 +95,176 @@ namespace Motion_Teach_In
 
             if (zeichnen_aktiv && löschen)                                                                 //wird aktiv, wenn der Radiergummie gewählt wurde und die maus gedrückt ist
             {
-                Point fünf = e.Location;                                                                //punkt-elemente werden eingeführt, um einen Lösch-Bereich zu haben
-                                                                                                        //sollte man unter dem phänomen der wurstfinger leiden.
-                Point vier = fünf;
-                vier.X = fünf.X-1;
+                #region RadiergummiRadius
+                Point dreizehn = e.Location;                                                                //punkt-elemente werden eingeführt, um einen Lösch-Bereich zu haben
+                                                                                                            //sollte man unter dem phänomen der wurstfinger leiden.
 
-                Point sechs = fünf;
-                sechs.X = e.Location.X +1;
+                Point eins = dreizehn;
+                eins.X = dreizehn.X-2;
+                eins.Y = dreizehn.Y - 2;                                                              //  01 02 03 04 05
+                                                                                                      //  06 07 08 09 10
+                Point zwei = dreizehn;                                                                //  11 12 13 14 15      13 entspricht der cursor-pos
+                zwei.X = e.Location.X -1;                                                             //  16 17 18 19 20
+                eins.Y = dreizehn.Y - 2;                                                              //  21 22 23 24 25
 
-                Point eins = fünf;
-                eins.X = fünf.X - 1;
-                eins.Y = fünf.Y + 1;
+                Point drei = dreizehn;
+                zwei.X = e.Location.X ;
+                eins.Y = dreizehn.Y - 2;
 
-                Point zwei = fünf;
-                eins.Y = fünf.Y + 1;
+                Point vier = dreizehn;
+                vier.X = e.Location.X+1;
+                eins.Y = dreizehn.Y - 2;
 
-                Point drei = fünf;
-                eins.X = fünf.X + 1;
-                eins.Y = fünf.Y + 1;
+                Point fünf = dreizehn;
+                fünf.X = e.Location.X+2;
+                eins.Y = dreizehn.Y - 2;
 
-                Point sieben = fünf;
-                eins.X = fünf.X - 1;
-                eins.Y = fünf.Y -1;
+                Point sechs= dreizehn;
+                sechs.X = e.Location.X - 2;
+                eins.Y = dreizehn.Y - 1;
 
-                Point acht = fünf;
-                
-                eins.Y = fünf.Y - 1;
+                Point sieben = dreizehn;
+                sieben.X = e.Location.X - 1;
+                eins.Y = dreizehn.Y - 1;
 
-                Point neun = fünf;
-                eins.X = fünf.X + 1;
-                eins.Y = fünf.Y - 1;
+                Point acht = dreizehn;
+                acht.X = e.Location.X ;
+                eins.Y = dreizehn.Y - 1;
 
+                Point neun = dreizehn;
+                neun.X = e.Location.X +1;
+                eins.Y = dreizehn.Y - 1;
+
+                Point zehn = dreizehn;
+                zehn.X = e.Location.X +2 ;
+                eins.Y = dreizehn.Y - 1;
+
+                Point elf = dreizehn;
+                elf.X = e.Location.X - 2;
+                eins.Y = dreizehn.Y ;
+
+                Point zwölf = dreizehn;
+                zwölf.X = e.Location.X -1 ;
+                eins.Y = dreizehn.Y ;
+
+                Point vierzehn = dreizehn;
+                vierzehn.X = e.Location.X + 1;
+                eins.Y = vierzehn.Y ;
+
+                Point fünfzehn = dreizehn;
+                fünfzehn.X = e.Location.X + 2;
+                eins.Y = fünfzehn.Y ;
+
+                Point sechszehn = dreizehn;
+                fünfzehn.X = e.Location.X - 2;
+                eins.Y = fünfzehn.Y+1;
+
+                Point siebzehn = dreizehn;
+                siebzehn.X = e.Location.X -1;
+                eins.Y = fünfzehn.Y + 1;
+
+                Point achtzehn = dreizehn;
+                achtzehn.X = e.Location.X ;
+                eins.Y = fünfzehn.Y + 1;
+
+                Point neunzehn = dreizehn;
+                neunzehn.X = e.Location.X + 1;
+                eins.Y = fünfzehn.Y + 1;
+
+                Point zwanzig = dreizehn;
+                zwanzig.X = e.Location.X + 2;
+                eins.Y = fünfzehn.Y + 1;
+
+                Point einundzwanzig = dreizehn;
+                einundzwanzig.X = e.Location.X - 2;
+                eins.Y = fünfzehn.Y + 2;
+
+                Point zweiundzwanzig = dreizehn;
+                zweiundzwanzig.X = e.Location.X - 1;
+                eins.Y = fünfzehn.Y + 2;
+
+                Point dreiundzwanzig = dreizehn;
+                dreiundzwanzig.X = e.Location.X ;
+                eins.Y = fünfzehn.Y + 2;
+
+                Point vierundzwanzig = dreizehn;
+                vierundzwanzig.X = e.Location.X + 1;
+                eins.Y = fünfzehn.Y + 2;
+
+                Point fünfundzwanzig = dreizehn;
+                fünfundzwanzig.X = e.Location.X + 2;
+                eins.Y = fünfzehn.Y + 2;
+
+
+
+
+
+
+
+                #endregion                                                                          //enthält die punkte die den radiergummi definieren
 
 
                 for (int i = 0; i <= arbeits_kopie.Count - 1; i++)
                 {
+                    bool test = false;
+                   
                     for (int y = 0; y <= arbeits_kopie[i].Count - 1; y++)
                     {
-                        if (arbeits_kopie[i][y].Punkt == fünf || arbeits_kopie[i][y].Punkt == eins || arbeits_kopie[i][y].Punkt == zwei || arbeits_kopie[i][y].Punkt == drei || arbeits_kopie[i][y].Punkt == vier || arbeits_kopie[i][y].Punkt == sechs || arbeits_kopie[i][y].Punkt == sieben || arbeits_kopie[i][y].Punkt == acht || arbeits_kopie[i][y].Punkt == neun )                                         //durchsuch die koordinaten-listen nach der aktuellen Mauszeigerposition und löscht diese
+                        if (arbeits_kopie[i][y].Punkt == fünfzehn || arbeits_kopie[i][y].Punkt == eins || arbeits_kopie[i][y].Punkt == zwei || arbeits_kopie[i][y].Punkt == drei || 
+                            arbeits_kopie[i][y].Punkt == vier || arbeits_kopie[i][y].Punkt == fünf || arbeits_kopie[i][y].Punkt == sechs || arbeits_kopie[i][y].Punkt == sieben || arbeits_kopie[i][y].Punkt == acht || 
+                            arbeits_kopie[i][y].Punkt == neun || arbeits_kopie[i][y].Punkt == zehn || arbeits_kopie[i][y].Punkt == elf || arbeits_kopie[i][y].Punkt == zwölf || arbeits_kopie[i][y].Punkt == dreizehn ||
+                            arbeits_kopie[i][y].Punkt == vierzehn || arbeits_kopie[i][y].Punkt == fünfzehn || arbeits_kopie[i][y].Punkt == sechszehn || arbeits_kopie[i][y].Punkt == siebzehn || arbeits_kopie[i][y].Punkt == achtzehn
+                             || arbeits_kopie[i][y].Punkt == neunzehn || arbeits_kopie[i][y].Punkt == zwanzig || arbeits_kopie[i][y].Punkt == zweiundzwanzig || arbeits_kopie[i][y].Punkt == dreiundzwanzig || arbeits_kopie[i][y].Punkt == vierundzwanzig
+                              || arbeits_kopie[i][y].Punkt == fünfundzwanzig)                                         //durchsuch die koordinaten-listen nach der aktuellen Mauszeigerposition und löscht diese
                         {
                             
                             #region unfertige aufteilung der listen
 
-                            if (y != 0)
+                            if (y != 0 )
                             {
                                 List<Koordinaten> teilen1 = arbeits_kopie[i].GetRange(0, y - 1);
                                 List<Koordinaten> teilen2 = arbeits_kopie[i].GetRange(y + 1,arbeits_kopie[i].Count-1 - y);
-                                // arbeits_kopie[i].RemoveAt(y);
-                                // arbeits_kopie[i].Clear();
-                                if (teilen1 != null)
+                               
+                                if (teilen1.Count != 0)
                                 {
                                     arbeits_kopie.Insert(i + 1, teilen1);
                                 }
-                                if (teilen2 != null)
-                                {
-                                    arbeits_kopie.Insert(i + 2, teilen2);
+                                if (teilen2.Count != 0)
+                                {   
+                                    arbeits_kopie.Insert(i + 1, teilen2);
                                 }
-                               // arbeits_kopie[i].Clear();
+                               
                                 arbeits_kopie.RemoveAt(i);
 
                                 #endregion
 
                                 Refresh();
-
+                                test = true;
+                               
                                 break;
+                                
+                            }
+                            if (y == 0 ||y == arbeits_kopie[i].Count-1)
+                            {
+                                arbeits_kopie[i].RemoveAt(y);
+                                if (arbeits_kopie[i].Count <= 1)
+                                {
+                                    arbeits_kopie.RemoveAt(i);
+                                }
+                                Refresh();
                             }
 
-
+                           
 
 
 
                         }
+                       
 
                     }
+                    if (test)
+                    { break; }
+                    
                 }
             }
         }
@@ -176,7 +273,7 @@ namespace Motion_Teach_In
         {
 
            Brush pinsel = (Brush)Brushes.Black;                                                              //neues pinsel-obj und graphics-obj erstellen
-           // Pen stift = new Pen(Color.Black);
+           
             Graphics g = this.CreateGraphics();
 
 
@@ -186,17 +283,17 @@ namespace Motion_Teach_In
 
                 foreach (Koordinaten punkt in points)
                 {
-                    long zeit = punkt.vergangegene_zeit;
+                    long zeit = punkt.VergangeneZeit;
 
                     if (!wiedergeben_aktiv)
                     {
-                        g.FillRectangle(pinsel, punkt.Punkt.X, punkt.Punkt.Y, 4, 4);
+                        g.FillRectangle(pinsel, punkt.Punkt.X, punkt.Punkt.Y, 5, 5);
                         
 
                     }
-                    else                                                                                 //ist die wiedergabe aktiv, wird versetzt und zeit-korrekt gezeichnet
+                    if (wiedergeben_aktiv)                                                                                //ist die wiedergabe aktiv, wird versetzt und zeit-korrekt gezeichnet
                     {
-                        g.FillRectangle(pinsel, punkt.Punkt.X + 50, punkt.Punkt.Y + 50, 4, 4);
+                        g.FillRectangle(pinsel, punkt.Punkt.X + 50, punkt.Punkt.Y + 50, 5, 5);
                        
 
                         Thread.Sleep((int)(zeit - unabhängige_zeit));
@@ -215,13 +312,17 @@ namespace Motion_Teach_In
             {
                 löschen = true;
                 Radiergummi.Text = "Löschen aktiv";
+                Cursor = new Cursor(GetType(), "gummi.cur");
+               
             }
             else
             {
                 Radiergummi.Text = "Löschen";
                 löschen = false;
                 zeichnen_aktiv = false;
+                Cursor = DefaultCursor;
             }
+           
         }
 
         public void Wiedergabe()//event wird ausgelöst wenn der wiedergabe-button gedrückt wird, fungiert als schalter (wiedergabe ein/aus) und zwingt die form sich neu zu zeichnen
