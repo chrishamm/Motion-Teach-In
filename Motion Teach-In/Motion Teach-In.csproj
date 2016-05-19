@@ -55,8 +55,9 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Koordinaten.cs" />
-    <Compile Include="Logik.cs" />
+    <Compile Include="Logik\Koordinate.cs" />
+    <Compile Include="Logik\Datei.cs" />
+    <Compile Include="Logik\Linie.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Testumgebung.cs">
@@ -107,7 +108,7 @@
     <None Include="Resources\cursor.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="gummi.cur" />
+    <EmbeddedResource Include="Resources\gummi.cur" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

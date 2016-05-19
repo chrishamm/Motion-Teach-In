@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Motion_Teach_In
@@ -17,11 +10,56 @@ namespace Motion_Teach_In
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        #region Modusauswahl
+        private void mnuBeenden_Click(object sender, EventArgs e)
         {
-            
-            zeichenfläche1.Wiedergabe();
-            
+            Close();
         }
+
+        private void tsbZeichnenmodus_Click(object sender, EventArgs e)
+        {
+            tsbZeichnenmodus.Checked = true;
+            tsbLoeschmodus.Checked = false;
+            zflInhalt.ControlModus = Zeichenfläche.Modus.Zeichenmodus;
+        }
+
+        private void tsbLoeschmodus_Click(object sender, EventArgs e)
+        {
+            tsbZeichnenmodus.Checked = false;
+            tsbLoeschmodus.Checked = true;
+            zflInhalt.ControlModus = Zeichenfläche.Modus.Loeschmodus;
+        }
+
+        private void tsbWiedergabe_Click(object sender, EventArgs e)
+        {
+            zflInhalt.ControlModus = Zeichenfläche.Modus.Wiedergabemodus;
+            zflInhalt.WiedergabeStarten();
+        }
+
+        private void tsbStop_Click(object sender, EventArgs e)
+        {
+            zflInhalt.WiedergabeStoppen();
+        }
+
+        private void zflInhalt_WiedergabeGestartet(object sender, EventArgs e)
+        {
+            tsbZeichnenmodus.Checked = false;
+            tsbLoeschmodus.Checked = false;
+
+            tsbWiedergabe.Checked = true;
+            tsbWiedergabe.Enabled = false;
+            tsbStop.Enabled = true;
+        }
+
+        private void zflInhalt_WiedergabeGestoppt(object sender, EventArgs e)
+        {
+            zflInhalt.ControlModus = Zeichenfläche.Modus.Zeichenmodus;
+            tsbZeichnenmodus.Checked = true;
+
+            tsbWiedergabe.Enabled = true;
+            tsbWiedergabe.Checked = false;
+            tsbStop.Enabled = false;
+        }
+        #endregion
     }
 }

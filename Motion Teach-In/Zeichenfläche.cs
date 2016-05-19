@@ -17,321 +17,329 @@ namespace Motion_Teach_In
             InitializeComponent();
         }
 
-        #region globale variablen                                                                  
-        public static bool zeichnen_aktiv;                                                          //schalter um zeichnen zu ermöglichen            
-        public static bool wiedergeben_aktiv = false;                                               //schalter um wiedergabe zu ermöglichen
-        public static bool löschen = false;                                                         //schalter um löschen zu ermöglichen
-                                                                  //schalter, weil mouse_down sich doppelt aufruft.
-        public List<List<Koordinaten>> arbeits_kopie;                                               //Globale Listen-Liste auf der opperiert wird
-        public static Stopwatch Stoppuhr = new Stopwatch();                                         //Stopuhr zum erfassen der zeit zwischen den einzellnen punkten
-        public long unabhängige_zeit = 0;                                                           //zwischenspeicher-variable für die Zeit
+        #region Fixe Werte
+        private static readonly int PunktDurchmesser = 5;   // Durchmesser für gezeichnete Punkte
 
+        private static readonly int Loeschhoehe = 5;        // Breite des zu löschenden Rechtecks im Löschmodus
+        private static readonly int Loeschbreite = 6;       // Höhe des zu löschenden Rechtecks im Löschmodus
         #endregion
 
-
-
-
-        private void Zeichenfläche_Load(object sender, EventArgs e)//Event welches beim Laden der Form aufgerufen wird
+        #region Zustand des Controls
+        public enum Modus
         {
-
-
-            arbeits_kopie = new List<List<Koordinaten>>();                                              //Erstellen der Events und der initialen Listen-Liste
-            this.DoubleBuffered = true;
-           
+            Zeichenmodus,       // Neue Bewegungen können aufgezeichnet werden
+            Loeschmodus,        // Bereits eingegebene Bewegungen können per Radiergummi gelöscht werden
+            Wiedergabemodus     // Bereits eingegebene Bewegungen werden abgespielt
         }
 
-        private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)//Event wird ausgelöst wenn die Maus gedrückt wird (quasi initial-zündung)
+        private Modus aktuellerModus;
+        public Modus ControlModus
         {
-            if (!löschen )
+            get
             {
-                arbeits_kopie.Add(new List<Koordinaten>());
-                Stoppuhr.Start();
-                
+                return aktuellerModus;
             }
-            zeichnen_aktiv = true;
-        }
 
-        private void Zeichenfläche_MouseUp(object sender, MouseEventArgs e)//Event wird ausgelöst wenn die Maus losgelassen wird
-        {
-            zeichnen_aktiv = false;                                                                        //wird die maus losgelassen, wird die uhr zurück gesetzt und das zeichnen ist nicht mehr möglich
-            Stoppuhr.Reset();
-        }
-
-        private void Zeichenfläche_MouseMove(object sender, MouseEventArgs e)//Event wird ausgelöst, wenn die Maus bewegt wird
-        {
-            
-
-            if (zeichnen_aktiv && !löschen)                                                                //ist das zeichnen ermöglicht und will man nicht löschen, werden hier die mauskoord. gesammelt und sortiert
+            set
             {
-                Koordinaten koord = new Koordinaten();
-                arbeits_kopie[arbeits_kopie.Count - 1].Add(koord);
-
-                int index_innen = arbeits_kopie[arbeits_kopie.Count - 1].Count;                            //dient nur zu verkürzung der indizes
-                int index_außen = arbeits_kopie.Count;
-
-
-                //if-abfragen sortieren doppelte punkte aus
-                if (index_innen >= 2 && arbeits_kopie[index_außen - 1][index_innen - 2].Punkt != e.Location) //wenn der letzte punkt ungleich dem potentiellen neuen punkt ist und es überhaupt schon
-                {                                                                                          //2 Punkte gibt, wird der Punkt-Wert und der zeitwert übernommen
-                    arbeits_kopie[index_außen - 1][index_innen - 1].Punkt = e.Location;
-                    long zeit = Stoppuhr.ElapsedMilliseconds;
-                    arbeits_kopie[index_außen - 1][index_innen - 1].VergangeneZeit = zeit;
-                }
-
-                if (index_innen >= 2 && arbeits_kopie[index_außen - 1][index_innen - 2].Punkt == e.Location)//wenn der letzte punkt gleich dem potentiellen neuen punkt ist wird die neueste koordinate gelöscht
+                // Control vor dem Setzen des neuen Modus prüfen und ggf. zurücksetzen
+                switch (ControlModus)
                 {
-                    arbeits_kopie[index_außen - 1].RemoveAt(index_innen - 1);
+                    case Modus.Loeschmodus:
+                        Cursor = Cursors.Default;
+                        break;
+
+                    case Modus.Wiedergabemodus:
+                        if (modusAktiv)
+                        {
+                            WiedergabeStoppen();
+                        }
+                        break;
                 }
 
-                if (index_innen <= 1)                                                                      // greift nur beim ersten durchlauf, hier kein punkt-vergleich (womit auch)
+                // Erst dann neuen Modus anwenden
+                switch (value)
                 {
-                    arbeits_kopie[index_außen - 1][index_innen - 1].Punkt = e.Location;
-                    long zeit = Stoppuhr.ElapsedMilliseconds;
-                    arbeits_kopie[index_außen - 1][index_innen - 1].VergangeneZeit = zeit;
+                    case Modus.Loeschmodus:
+                        Cursor = new Cursor(GetType(), "Resources.gummi.cur");
+                        break;
+
+                    case Modus.Wiedergabemodus:
+                        akkumulierteZeitTotal = 0;
+                        numWiedergegebeneLinien = 0;
+                        break;
                 }
+                aktuellerModus = value;
+            }
+        }
+        private bool modusAktiv;     // Ist der gewählte Modus gerade aktiv?
+        #endregion
+
+        #region Bindung an die Dateikomponente
+        private Datei datei;
+        public Datei Datei
+        {
+            get
+            {
+                return datei;
+            }
+
+            set
+            {
+                if (value == null)
+                {
+                    // Wir benötigen stets eine valide Instanz der Dateiklasse...
+                    throw new ArgumentNullException();
+                }
+
+                datei = value;
                 Refresh();
             }
+        }
+        #endregion
 
+        // Event welches beim Laden der Form aufgerufen wird
+        private void Zeichenfläche_Load(object sender, EventArgs e)
+        {
+            DoubleBuffered = true;
 
-            if (zeichnen_aktiv && löschen)                                                                 //wird aktiv, wenn der Radiergummie gewählt wurde und die maus gedrückt ist
+            datei = new Datei();            // datei darf nie null werden
+            stoppuhr = new Stopwatch();     // Zum Messen der zeitlichen Dimension beim Zeichnen
+        }
+
+        #region Events zum Einspeichern von Bewegungen per Touch und per Maus
+        private Stopwatch stoppuhr;                 // Zum Erfassen der Zeit zwischen den einzelnen Punkten
+        private Linie zeichnendeLinie;              // Welche Linie wird gerade gezeichnet?
+
+        // Event wird ausgelöst wenn die Maus gedrückt wird (quasi initial-zündung)
+        private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (ControlModus == Modus.Zeichenmodus)
             {
-                #region RadiergummiRadius
-                Point dreizehn = e.Location;                                                                //punkt-elemente werden eingeführt, um einen Lösch-Bereich zu haben
-                                                                                                            //sollte man unter dem phänomen der wurstfinger leiden.
+                // Neue Linie anlegen
+                zeichnendeLinie = new Linie();
+                datei.Add(zeichnendeLinie);
 
-                Point eins = dreizehn;
-                eins.X = dreizehn.X-2;
-                eins.Y = dreizehn.Y - 2;                                                              //  01 02 03 04 05
-                                                                                                      //  06 07 08 09 10
-                Point zwei = dreizehn;                                                                //  11 12 13 14 15      13 entspricht der cursor-pos
-                zwei.X = e.Location.X -1;                                                             //  16 17 18 19 20
-                eins.Y = dreizehn.Y - 2;                                                              //  21 22 23 24 25
+                // Zeichenmodus effektiv aktivieren
+                stoppuhr.Start();
+                modusAktiv = true;
 
-                Point drei = dreizehn;
-                zwei.X = e.Location.X ;
-                eins.Y = dreizehn.Y - 2;
+                // Ersten Punkt an dieser Koordinate anlegen
+                Zeichenfläche_MouseMove(this, e);
+            }
+            else if (ControlModus == Modus.Loeschmodus)
+            {
+                modusAktiv = true;
+            }
+        }
 
-                Point vier = dreizehn;
-                vier.X = e.Location.X+1;
-                eins.Y = dreizehn.Y - 2;
+        // Event wird ausgelöst wenn die Maus losgelassen wird
+        private void Zeichenfläche_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (modusAktiv)
+            {
+                stoppuhr.Reset();
+                zeichnendeLinie = null;
+                modusAktiv = false;
+            }
+        }
 
-                Point fünf = dreizehn;
-                fünf.X = e.Location.X+2;
-                eins.Y = dreizehn.Y - 2;
+        // Event wird ausgelöst, wenn die Maus bewegt wird oder wenn eine neue Koordinate aufgenommen werden soll
+        private void Zeichenfläche_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Wir können nur reagieren, wenn die Maus oder der Touch-Controller aktiviert wurde...
+            if (!modusAktiv)
+            {
+                return;
+            }
 
-                Point sechs= dreizehn;
-                sechs.X = e.Location.X - 2;
-                eins.Y = dreizehn.Y - 1;
-
-                Point sieben = dreizehn;
-                sieben.X = e.Location.X - 1;
-                eins.Y = dreizehn.Y - 1;
-
-                Point acht = dreizehn;
-                acht.X = e.Location.X ;
-                eins.Y = dreizehn.Y - 1;
-
-                Point neun = dreizehn;
-                neun.X = e.Location.X +1;
-                eins.Y = dreizehn.Y - 1;
-
-                Point zehn = dreizehn;
-                zehn.X = e.Location.X +2 ;
-                eins.Y = dreizehn.Y - 1;
-
-                Point elf = dreizehn;
-                elf.X = e.Location.X - 2;
-                eins.Y = dreizehn.Y ;
-
-                Point zwölf = dreizehn;
-                zwölf.X = e.Location.X -1 ;
-                eins.Y = dreizehn.Y ;
-
-                Point vierzehn = dreizehn;
-                vierzehn.X = e.Location.X + 1;
-                eins.Y = vierzehn.Y ;
-
-                Point fünfzehn = dreizehn;
-                fünfzehn.X = e.Location.X + 2;
-                eins.Y = fünfzehn.Y ;
-
-                Point sechszehn = dreizehn;
-                fünfzehn.X = e.Location.X - 2;
-                eins.Y = fünfzehn.Y+1;
-
-                Point siebzehn = dreizehn;
-                siebzehn.X = e.Location.X -1;
-                eins.Y = fünfzehn.Y + 1;
-
-                Point achtzehn = dreizehn;
-                achtzehn.X = e.Location.X ;
-                eins.Y = fünfzehn.Y + 1;
-
-                Point neunzehn = dreizehn;
-                neunzehn.X = e.Location.X + 1;
-                eins.Y = fünfzehn.Y + 1;
-
-                Point zwanzig = dreizehn;
-                zwanzig.X = e.Location.X + 2;
-                eins.Y = fünfzehn.Y + 1;
-
-                Point einundzwanzig = dreizehn;
-                einundzwanzig.X = e.Location.X - 2;
-                eins.Y = fünfzehn.Y + 2;
-
-                Point zweiundzwanzig = dreizehn;
-                zweiundzwanzig.X = e.Location.X - 1;
-                eins.Y = fünfzehn.Y + 2;
-
-                Point dreiundzwanzig = dreizehn;
-                dreiundzwanzig.X = e.Location.X ;
-                eins.Y = fünfzehn.Y + 2;
-
-                Point vierundzwanzig = dreizehn;
-                vierundzwanzig.X = e.Location.X + 1;
-                eins.Y = fünfzehn.Y + 2;
-
-                Point fünfundzwanzig = dreizehn;
-                fünfundzwanzig.X = e.Location.X + 2;
-                eins.Y = fünfzehn.Y + 2;
-
-
-
-
-
-
-
-                #endregion                                                                          //enthält die punkte die den radiergummi definieren
-
-
-                for (int i = 0; i <= arbeits_kopie.Count - 1; i++)
-                {
-                    bool test = false;
-                   
-                    for (int y = 0; y <= arbeits_kopie[i].Count - 1; y++)
+            // In welchem Modus befindet sich das Control?
+            switch (ControlModus)
+            {
+                case Modus.Zeichenmodus:
+                    // Ist die letzte Koordinate ungleich der aktuelle Koordinate?
+                    if (zeichnendeLinie.LetzteKoordinate != e.Location)
                     {
-                        if (arbeits_kopie[i][y].Punkt == fünfzehn || arbeits_kopie[i][y].Punkt == eins || arbeits_kopie[i][y].Punkt == zwei || arbeits_kopie[i][y].Punkt == drei || 
-                            arbeits_kopie[i][y].Punkt == vier || arbeits_kopie[i][y].Punkt == fünf || arbeits_kopie[i][y].Punkt == sechs || arbeits_kopie[i][y].Punkt == sieben || arbeits_kopie[i][y].Punkt == acht || 
-                            arbeits_kopie[i][y].Punkt == neun || arbeits_kopie[i][y].Punkt == zehn || arbeits_kopie[i][y].Punkt == elf || arbeits_kopie[i][y].Punkt == zwölf || arbeits_kopie[i][y].Punkt == dreizehn ||
-                            arbeits_kopie[i][y].Punkt == vierzehn || arbeits_kopie[i][y].Punkt == fünfzehn || arbeits_kopie[i][y].Punkt == sechszehn || arbeits_kopie[i][y].Punkt == siebzehn || arbeits_kopie[i][y].Punkt == achtzehn
-                             || arbeits_kopie[i][y].Punkt == neunzehn || arbeits_kopie[i][y].Punkt == zwanzig || arbeits_kopie[i][y].Punkt == zweiundzwanzig || arbeits_kopie[i][y].Punkt == dreiundzwanzig || arbeits_kopie[i][y].Punkt == vierundzwanzig
-                              || arbeits_kopie[i][y].Punkt == fünfundzwanzig)                                         //durchsuch die koordinaten-listen nach der aktuellen Mauszeigerposition und löscht diese
+                        // Nein - neue Koordinate erzeugen und aufnehmen
+                        zeichnendeLinie.Add(new Koordinate(e.X, e.Y, stoppuhr.ElapsedMilliseconds));
+                        stoppuhr.Restart();
+
+                        // Neuen Block zeichnen
+                        Invalidate();
+                    }
+                    break;
+
+                case Modus.Loeschmodus:
+                    // Der Löschmodus soll alle Punkte im enthaltenen Rechteck löschen, was von der Dateiklasse erledigt wird
+                    if (datei.LoescheBei(e.X, e.Y, Loeschhoehe, Loeschbreite))
+                    {
+                        // Aus Performancegründen wird das Control nur bei Änderungen des Inhalts neu gezeichnet
+                        Invalidate();
+                    }
+                    break;
+            }
+        }
+        #endregion
+
+        #region Wiedergabesteuerung
+        private long akkumulierteZeitTotal;
+        private int numWiedergegebeneLinien;       // Wieviele Linien sind schon gezeichnet worden?
+
+        public event EventHandler WiedergabeGestartet;
+        public event EventHandler WiedergabeGestoppt;
+
+        // Methode um die zeitliche Wiedergabe des eingegebenen Inhalts zu starten
+        public void WiedergabeStarten()
+        {
+            if (ControlModus == Modus.Wiedergabemodus)
+            {
+                tmrZeichnen.Enabled = true;
+                modusAktiv = true;
+
+                stoppuhr.Start();
+                Invalidate();
+
+                WiedergabeGestartet?.Invoke(this, new EventArgs());
+            }
+        }
+
+        // Stoppt die Wiedergabe der eingegebenen Bewegungen
+        public void WiedergabeStoppen()
+        {
+            if (ControlModus == Modus.Wiedergabemodus)
+            {
+                stoppuhr.Stop();
+                tmrZeichnen.Enabled = false;
+                modusAktiv = false;
+                Invalidate();
+
+                WiedergabeGestoppt?.Invoke(this, new EventArgs());
+            }
+        }
+
+        // Liefert die Zeit in ms seit dem Wiedergabebeginn zurück
+        public long WiedergabeZeit
+        {
+            get
+            {
+                return akkumulierteZeitTotal;
+            }
+        }
+
+        private void tmrZeichnen_Tick(object sender, EventArgs e)
+        {
+            // Erneutes Zeichnen des Steuerelements erzwingen
+            Invalidate();
+        }
+        #endregion
+
+        // Event wird bei Refresh aufgerufen, zeichnet entweder normal oder zeichnet im Wiedergabemodus "nach"
+        private void Zeichenfläche_Paint(object sender, PaintEventArgs e)
+        {
+            Brush punktPinsel = Brushes.Black;
+            Pen linienPinsel = Pens.DarkGray;
+
+            // Optionen für den Wiedergabemodus
+            long akkumulierteZeit = 0;
+            int numAktuelleLinie = 0;
+
+            // Verbindungslinien zwischen den einzelnen Punkten zeichnen
+            Koordinate letzteKoordinate;
+            foreach(Linie l in datei)
+            {
+                letzteKoordinate = null;
+                foreach(Koordinate k in l)
+                {
+                    // Kann diese Verbindungslinie im Wiedergabemodus gezeichnet werden?
+                    if (ControlModus == Modus.Wiedergabemodus)
+                    {
+                        if (numWiedergegebeneLinien == numAktuelleLinie)
                         {
-                            
-                            #region unfertige aufteilung der listen
-
-                            if (y != 0 )
+                            if (akkumulierteZeit + k.Zeit > stoppuhr.ElapsedMilliseconds)
                             {
-                                List<Koordinaten> teilen1 = arbeits_kopie[i].GetRange(0, y - 1);
-                                List<Koordinaten> teilen2 = arbeits_kopie[i].GetRange(y + 1,arbeits_kopie[i].Count-1 - y);
-                               
-                                if (teilen1.Count != 0)
-                                {
-                                    arbeits_kopie.Insert(i + 1, teilen1);
-                                }
-                                if (teilen2.Count != 0)
-                                {   
-                                    arbeits_kopie.Insert(i + 1, teilen2);
-                                }
-                               
-                                arbeits_kopie.RemoveAt(i);
-
-                                #endregion
-
-                                Refresh();
-                                test = true;
-                               
                                 break;
-                                
                             }
-                            if (y == 0 ||y == arbeits_kopie[i].Count-1)
+                            else
                             {
-                                arbeits_kopie[i].RemoveAt(y);
-                                if (arbeits_kopie[i].Count <= 1)
-                                {
-                                    arbeits_kopie.RemoveAt(i);
-                                }
-                                Refresh();
+                                akkumulierteZeit += k.Zeit;
                             }
-
-                           
-
-
-
                         }
-                       
-
                     }
-                    if (test)
-                    { break; }
-                    
+
+                    // Verbindungen zwischen Punkten mit grauer Linie zeichnen
+                    if (letzteKoordinate != null)
+                    {
+                        e.Graphics.DrawLine(linienPinsel, letzteKoordinate.X, letzteKoordinate.Y, k.X, k.Y);
+                    }
+                    letzteKoordinate = k;
                 }
-            }
-        }
 
-        private void Zeichenfläche_Paint(object sender, PaintEventArgs e)//Event wird bei Refresh aufgerufen, zeichnet entweder normal oder zeichnet im wiedergabemodus "nach"
-        {
-
-           Brush pinsel = (Brush)Brushes.Black;                                                              //neues pinsel-obj und graphics-obj erstellen
-           
-            Graphics g = this.CreateGraphics();
-
-
-
-            foreach (List<Koordinaten> points in arbeits_kopie)                                          //durchläuft alle listen, ist die wiedergabe nicht aktiv
-            {                                                                                            //wird den koordinaten entsprechend gezeichnet
-
-                foreach (Koordinaten punkt in points)
+                if (ControlModus == Modus.Wiedergabemodus)
                 {
-                    long zeit = punkt.VergangeneZeit;
+                    numAktuelleLinie++;
 
-                    if (!wiedergeben_aktiv)
+                    // Nicht mehr als bis zur aktuellen Linie zeichnen...
+                    if (numAktuelleLinie > numWiedergegebeneLinien)
                     {
-                        g.FillRectangle(pinsel, punkt.Punkt.X, punkt.Punkt.Y, 5, 5);
-                        
-
-                    }
-                    if (wiedergeben_aktiv)                                                                                //ist die wiedergabe aktiv, wird versetzt und zeit-korrekt gezeichnet
-                    {
-                        g.FillRectangle(pinsel, punkt.Punkt.X + 50, punkt.Punkt.Y + 50, 5, 5);
-                       
-
-                        Thread.Sleep((int)(zeit - unabhängige_zeit));
-                        unabhängige_zeit = zeit;
+                        break;
                     }
                 }
             }
-            g.Dispose();
-            unabhängige_zeit = 0;
-        }
 
+            // Punkte zeichnen
+            bool wiedergabeUnterbrochen = false;
+            akkumulierteZeit = 0;
+            numAktuelleLinie = 0;
 
-        private void Radiergummi_Click(object sender, EventArgs e)//event wird ausgelöst wenn auf den radiergummi-button geklickt wird, fungiert eigentlich nur als bool-schalter
-        {
-            if (löschen == false)
+            foreach (Linie l in datei)
             {
-                löschen = true;
-                Radiergummi.Text = "Löschen aktiv";
-                Cursor = new Cursor(GetType(), "gummi.cur");
-               
+                foreach (Koordinate k in l)
+                {
+                    // Kann dieser Punkt im Wiedergabemodus gezeichnet werden?
+                    if (ControlModus == Modus.Wiedergabemodus)
+                    {
+                        if (numWiedergegebeneLinien == numAktuelleLinie)
+                        {
+                            if (akkumulierteZeit + k.Zeit > stoppuhr.ElapsedMilliseconds)
+                            {
+                                wiedergabeUnterbrochen = true;
+                                break;
+                            }
+                            else
+                            {
+                                akkumulierteZeit += k.Zeit;
+                            }
+                        }
+                    }
+
+                    // Punkte als Rechteck zeichnen
+                    e.Graphics.FillEllipse(punktPinsel, k.X - PunktDurchmesser / 2, k.Y - PunktDurchmesser / 2, PunktDurchmesser, PunktDurchmesser);
+                }
+
+                if (ControlModus == Modus.Wiedergabemodus)
+                {
+                    if (numWiedergegebeneLinien == numAktuelleLinie && !wiedergabeUnterbrochen)
+                    {
+                        // Aktuelle Linie konnte ohne Unterbrechung gezeichnet werden, also mit der nächsten weitermachen
+                        numWiedergegebeneLinien++;
+                        akkumulierteZeitTotal += akkumulierteZeit;
+                        stoppuhr.Restart();
+                    }
+                    numAktuelleLinie++;
+
+                    // Wenn aber die aktuelle Linie nicht komplett gezeichnet werden konnte, dann ist die Abbruchbedingung erfüllt
+                    if (numAktuelleLinie > numWiedergegebeneLinien)
+                    {
+                        break;
+                    }
+                }
             }
-            else
+
+            // Wiedergabe abgeschlossen?
+            if (ControlModus == Modus.Wiedergabemodus && !wiedergabeUnterbrochen && numAktuelleLinie == datei.Count)
             {
-                Radiergummi.Text = "Löschen";
-                löschen = false;
-                zeichnen_aktiv = false;
-                Cursor = DefaultCursor;
+                WiedergabeStoppen();
             }
-           
-        }
-
-        public void Wiedergabe()//event wird ausgelöst wenn der wiedergabe-button gedrückt wird, fungiert als schalter (wiedergabe ein/aus) und zwingt die form sich neu zu zeichnen
-        {
-            wiedergeben_aktiv = true;
-
-            Refresh();
-
-            wiedergeben_aktiv = false;
         }
     }
 }

@@ -16,10 +16,5 @@ namespace Motion_Teach_In
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Logik.erzeuge_DB();
-        }
     }
 }
