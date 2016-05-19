@@ -21,7 +21,7 @@ namespace Motion_Teach_In
         public static bool zeichnen_aktiv;                                                          //schalter um zeichnen zu ermöglichen            
         public static bool wiedergeben_aktiv = false;                                               //schalter um wiedergabe zu ermöglichen
         public static bool löschen = false;                                                         //schalter um löschen zu ermöglichen
-        public static bool zähler = true;                                                           //schalter, weil mouse_down sich doppelt aufruft.
+                                                                  //schalter, weil mouse_down sich doppelt aufruft.
         public List<List<Koordinaten>> arbeits_kopie;                                               //Globale Listen-Liste auf der opperiert wird
         public static Stopwatch Stoppuhr = new Stopwatch();                                         //Stopuhr zum erfassen der zeit zwischen den einzellnen punkten
         public long unabhängige_zeit = 0;                                                           //zwischenspeicher-variable für die Zeit
@@ -37,19 +37,16 @@ namespace Motion_Teach_In
 
             arbeits_kopie = new List<List<Koordinaten>>();                                              //Erstellen der Events und der initialen Listen-Liste
             this.DoubleBuffered = true;
-            this.MouseDown += new MouseEventHandler(Zeichenfläche_MouseDown);
-            this.MouseUp += new MouseEventHandler(Zeichenfläche_MouseUp);
-            this.MouseMove += new MouseEventHandler(Zeichenfläche_MouseMove);
-            this.Paint += new PaintEventHandler(Zeichenfläche_Paint);
+           
         }
 
         private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)//Event wird ausgelöst wenn die Maus gedrückt wird (quasi initial-zündung)
         {
-            if (!löschen && zähler)
+            if (!löschen )
             {
                 arbeits_kopie.Add(new List<Koordinaten>());
                 Stoppuhr.Start();
-                zähler = false;
+                
             }
             zeichnen_aktiv = true;
         }
@@ -62,7 +59,7 @@ namespace Motion_Teach_In
 
         private void Zeichenfläche_MouseMove(object sender, MouseEventArgs e)//Event wird ausgelöst, wenn die Maus bewegt wird
         {
-            zähler = true;
+            
 
             if (zeichnen_aktiv && !löschen)                                                                //ist das zeichnen ermöglicht und will man nicht löschen, werden hier die mauskoord. gesammelt und sortiert
             {
@@ -137,21 +134,36 @@ namespace Motion_Teach_In
                     {
                         if (arbeits_kopie[i][y].Punkt == fünf || arbeits_kopie[i][y].Punkt == eins || arbeits_kopie[i][y].Punkt == zwei || arbeits_kopie[i][y].Punkt == drei || arbeits_kopie[i][y].Punkt == vier || arbeits_kopie[i][y].Punkt == sechs || arbeits_kopie[i][y].Punkt == sieben || arbeits_kopie[i][y].Punkt == acht || arbeits_kopie[i][y].Punkt == neun )                                         //durchsuch die koordinaten-listen nach der aktuellen Mauszeigerposition und löscht diese
                         {
-                            arbeits_kopie[i].RemoveAt(y);
+                            
                             #region unfertige aufteilung der listen
-                            /* List<Point> teilen1 = arbeits_kopie[i].GetRange(0, --y);
-                            List<Point> teilen2 = arbeits_kopie[i].GetRange(++y, arbeits_kopie[i].Count-1);
-                            if (teilen1 != null)
+
+                            if (y != 0)
                             {
-                                arbeits_kopie.Insert(--i, teilen1);
+                                List<Koordinaten> teilen1 = arbeits_kopie[i].GetRange(0, y - 1);
+                                List<Koordinaten> teilen2 = arbeits_kopie[i].GetRange(y + 1,arbeits_kopie[i].Count-1 - y);
+                                // arbeits_kopie[i].RemoveAt(y);
+                                // arbeits_kopie[i].Clear();
+                                if (teilen1 != null)
+                                {
+                                    arbeits_kopie.Insert(i + 1, teilen1);
+                                }
+                                if (teilen2 != null)
+                                {
+                                    arbeits_kopie.Insert(i + 2, teilen2);
+                                }
+                               // arbeits_kopie[i].Clear();
+                                arbeits_kopie.RemoveAt(i);
+
+                                #endregion
+
+                                Refresh();
+
+                                break;
                             }
-                            if (teilen2 != null)
-                            {
-                                arbeits_kopie.Insert(++i, teilen2);
-                            }
-                            arbeits_kopie.RemoveAt(i);*/
-                            #endregion
-                            Refresh();
+
+
+
+
 
                         }
 
@@ -163,7 +175,8 @@ namespace Motion_Teach_In
         private void Zeichenfläche_Paint(object sender, PaintEventArgs e)//Event wird bei Refresh aufgerufen, zeichnet entweder normal oder zeichnet im wiedergabemodus "nach"
         {
 
-            Brush pinsel = (Brush)Brushes.Black;                                                              //neues pinsel-obj und graphics-obj erstellen
+           Brush pinsel = (Brush)Brushes.Black;                                                              //neues pinsel-obj und graphics-obj erstellen
+           // Pen stift = new Pen(Color.Black);
             Graphics g = this.CreateGraphics();
 
 
@@ -177,11 +190,14 @@ namespace Motion_Teach_In
 
                     if (!wiedergeben_aktiv)
                     {
-                        g.FillRectangle(pinsel, punkt.Punkt.X, punkt.Punkt.Y, 2, 2);
+                        g.FillRectangle(pinsel, punkt.Punkt.X, punkt.Punkt.Y, 4, 4);
+                        
+
                     }
                     else                                                                                 //ist die wiedergabe aktiv, wird versetzt und zeit-korrekt gezeichnet
                     {
-                        g.FillRectangle(pinsel, punkt.Punkt.X + 50, punkt.Punkt.Y + 50, 2, 2);
+                        g.FillRectangle(pinsel, punkt.Punkt.X + 50, punkt.Punkt.Y + 50, 4, 4);
+                       
 
                         Thread.Sleep((int)(zeit - unabhängige_zeit));
                         unabhängige_zeit = zeit;
