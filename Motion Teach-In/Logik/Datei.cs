@@ -88,7 +88,7 @@ namespace Motion_Teach_In
 
                 // Tabelle "Koordinaten" anlegen
                 SQLiteCommand createCmd = new SQLiteCommand(sqliteConnection);
-                createCmd.CommandText = "CREATE TABLE IF NOT EXISTS Koordinaten (linie INTEGER NOT NULL, x INTEGER NOT NULL, y INTEGER NOT NULL, zeit INTEGER NOT NULL);";
+                createCmd.CommandText = "CREATE TABLE IF NOT EXISTS Koordinaten (linie INTEGER NOT NULL, x INTEGER NOT NULL, y INTEGER NOT NULL, ZeitAbsolut INTEGER NOT NULL);";
                 createCmd.ExecuteNonQuery();
             }
 
@@ -105,7 +105,7 @@ namespace Motion_Teach_In
                 Linie linie = this[indexLinie];
                 foreach(Koordinate koord in linie)
                 {
-                    insertCmd.CommandText = String.Format("INSERT INTO Koordinaten (linie, x, y, zeit) VALUES ({0}, {1}, {2}, {3});",
+                    insertCmd.CommandText = String.Format("INSERT INTO Koordinaten (linie, x, y, ZeitAbsolut) VALUES ({0}, {1}, {2}, {3});",
                         indexLinie, koord.X, koord.Y, koord.Zeit);
                     insertCmd.ExecuteNonQuery();
                 }

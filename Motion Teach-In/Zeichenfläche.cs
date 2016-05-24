@@ -209,6 +209,7 @@ namespace Motion_Teach_In
             if (ControlModus == Modus.Wiedergabemodus)
             {
                 stoppuhr.Stop();
+                
                 tmrZeichnen.Enabled = false;
                 modusAktiv = false;
                 Invalidate();
@@ -223,6 +224,22 @@ namespace Motion_Teach_In
             get
             {
                 return akkumulierteZeitTotal;
+            }
+        }
+        public long ZeitGesammt
+        {
+            get
+            {
+                int zeit = 0;
+                foreach (Linie l in datei)
+                {
+                    foreach (Koordinate koord in l)
+
+                    {
+                        zeit += (int)koord.Zeit;
+                    }
+                }
+                return zeit;
             }
         }
 
@@ -244,7 +261,7 @@ namespace Motion_Teach_In
             int numAktuelleLinie = 0;
 
             // Verbindungslinien zwischen den einzelnen Punkten zeichnen
-            Koordinate letzteKoordinate;
+             Koordinate letzteKoordinate;
             foreach(Linie l in datei)
             {
                 letzteKoordinate = null;
@@ -264,12 +281,13 @@ namespace Motion_Teach_In
                                 akkumulierteZeit += k.Zeit;
                             }
                         }
-                    }
+                    } 
 
                     // Verbindungen zwischen Punkten mit grauer Linie zeichnen
                     if (letzteKoordinate != null)
                     {
                         e.Graphics.DrawLine(linienPinsel, letzteKoordinate.X, letzteKoordinate.Y, k.X, k.Y);
+                        
                     }
                     letzteKoordinate = k;
                 }
@@ -317,7 +335,7 @@ namespace Motion_Teach_In
                 }
 
                 if (ControlModus == Modus.Wiedergabemodus)
-                {
+                {   
                     if (numWiedergegebeneLinien == numAktuelleLinie && !wiedergabeUnterbrochen)
                     {
                         // Aktuelle Linie konnte ohne Unterbrechung gezeichnet werden, also mit der nächsten weitermachen

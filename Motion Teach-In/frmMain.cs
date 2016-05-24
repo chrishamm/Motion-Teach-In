@@ -49,6 +49,7 @@ namespace Motion_Teach_In
             tsbWiedergabe.Checked = true;
             tsbWiedergabe.Enabled = false;
             tsbStop.Enabled = true;
+            timer1.Start();
         }
 
         private void zflInhalt_WiedergabeGestoppt(object sender, EventArgs e)
@@ -59,6 +60,7 @@ namespace Motion_Teach_In
             tsbWiedergabe.Enabled = true;
             tsbWiedergabe.Checked = false;
             tsbStop.Enabled = false;
+            timer1.Start();
         }
         #endregion
 
@@ -130,6 +132,13 @@ namespace Motion_Teach_In
             {
                 e.Cancel = true;
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)// wird bei wiedergabestart gestartet und dann im 0.5s interval ausgeführt, soll fkt aktualisieren rufen
+        {
+            zeitanzeige1.AlleZeit = (int)zflInhalt.ZeitGesammt;
+            //zeitanzeige1.Aktualisieren();
+           
         }
     }
 }

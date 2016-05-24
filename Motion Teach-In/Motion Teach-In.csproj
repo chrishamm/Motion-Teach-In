@@ -72,6 +72,12 @@
     <Compile Include="Zeichenfläche.Designer.cs">
       <DependentUpon>Zeichenfläche.cs</DependentUpon>
     </Compile>
+    <Compile Include="Zeitanzeige.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Zeitanzeige.Designer.cs">
+      <DependentUpon>Zeitanzeige.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Zeichenfläche.resx">
       <DependentUpon>Zeichenfläche.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Zeitanzeige.resx">
+      <DependentUpon>Zeitanzeige.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
