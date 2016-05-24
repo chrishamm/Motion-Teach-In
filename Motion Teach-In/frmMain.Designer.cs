@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.mnuMenu = new System.Windows.Forms.MenuStrip();
             this.mnuDatei = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuNeu = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuÖffnen = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSpeichern = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSpeichernUnter = new System.Windows.Forms.ToolStripMenuItem();
             this.tssDatei = new System.Windows.Forms.ToolStripSeparator();
             this.mnuBeenden = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,27 +43,27 @@
             this.mnuHilfe = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuÜber = new System.Windows.Forms.ToolStripMenuItem();
             this.tsToolbar = new System.Windows.Forms.ToolStrip();
-            this.tssModus = new System.Windows.Forms.ToolStripSeparator();
-            this.spcInhalt = new System.Windows.Forms.SplitContainer();
-            this.tlpDetails = new System.Windows.Forms.TableLayoutPanel();
-            this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
-            this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
             this.tsbZeichnenmodus = new System.Windows.Forms.ToolStripButton();
             this.tsbLoeschmodus = new System.Windows.Forms.ToolStripButton();
+            this.tssModus = new System.Windows.Forms.ToolStripSeparator();
             this.tsbWiedergabe = new System.Windows.Forms.ToolStripButton();
             this.tsbStop = new System.Windows.Forms.ToolStripButton();
-            this.mnuNeu = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuÖffnen = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSpeichern = new System.Windows.Forms.ToolStripMenuItem();
-            this.zeitanzeige1 = new Motion_Teach_In.Zeitanzeige();
+            this.spcInhalt = new System.Windows.Forms.SplitContainer();
+            this.tlpDetails = new System.Windows.Forms.TableLayoutPanel();
+            this.lblLinien = new System.Windows.Forms.Label();
+            this.lstLinien = new System.Windows.Forms.ListBox();
+            this.zazSkala = new Motion_Teach_In.Zeitanzeige();
             this.zflInhalt = new Motion_Teach_In.Zeichenfläche();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
+            this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
+            this.tmrWiedergabe = new System.Windows.Forms.Timer(this.components);
             this.mnuMenu.SuspendLayout();
             this.tsToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spcInhalt)).BeginInit();
             this.spcInhalt.Panel1.SuspendLayout();
             this.spcInhalt.Panel2.SuspendLayout();
             this.spcInhalt.SuspendLayout();
+            this.tlpDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMenu
@@ -87,6 +90,33 @@
             this.mnuDatei.Name = "mnuDatei";
             this.mnuDatei.Size = new System.Drawing.Size(46, 20);
             this.mnuDatei.Text = "Datei";
+            // 
+            // mnuNeu
+            // 
+            this.mnuNeu.Image = ((System.Drawing.Image)(resources.GetObject("mnuNeu.Image")));
+            this.mnuNeu.Name = "mnuNeu";
+            this.mnuNeu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.mnuNeu.Size = new System.Drawing.Size(291, 22);
+            this.mnuNeu.Text = "Neu";
+            this.mnuNeu.Click += new System.EventHandler(this.mnuNeu_Click);
+            // 
+            // mnuÖffnen
+            // 
+            this.mnuÖffnen.Image = ((System.Drawing.Image)(resources.GetObject("mnuÖffnen.Image")));
+            this.mnuÖffnen.Name = "mnuÖffnen";
+            this.mnuÖffnen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.mnuÖffnen.Size = new System.Drawing.Size(291, 22);
+            this.mnuÖffnen.Text = "Öffnen";
+            this.mnuÖffnen.Click += new System.EventHandler(this.mnuÖffnen_Click);
+            // 
+            // mnuSpeichern
+            // 
+            this.mnuSpeichern.Image = ((System.Drawing.Image)(resources.GetObject("mnuSpeichern.Image")));
+            this.mnuSpeichern.Name = "mnuSpeichern";
+            this.mnuSpeichern.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.mnuSpeichern.Size = new System.Drawing.Size(291, 22);
+            this.mnuSpeichern.Text = "Speichern";
+            this.mnuSpeichern.Click += new System.EventHandler(this.mnuSpeichern_Click);
             // 
             // mnuSpeichernUnter
             // 
@@ -155,51 +185,6 @@
             this.tsToolbar.TabIndex = 3;
             this.tsToolbar.Text = "Toolbar";
             // 
-            // tssModus
-            // 
-            this.tssModus.Name = "tssModus";
-            this.tssModus.Size = new System.Drawing.Size(6, 31);
-            // 
-            // spcInhalt
-            // 
-            this.spcInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spcInhalt.Location = new System.Drawing.Point(0, 55);
-            this.spcInhalt.Name = "spcInhalt";
-            // 
-            // spcInhalt.Panel1
-            // 
-            this.spcInhalt.Panel1.Controls.Add(this.tlpDetails);
-            // 
-            // spcInhalt.Panel2
-            // 
-            this.spcInhalt.Panel2.Controls.Add(this.zeitanzeige1);
-            this.spcInhalt.Panel2.Controls.Add(this.zflInhalt);
-            this.spcInhalt.Panel2.Margin = new System.Windows.Forms.Padding(0, 55, 0, 0);
-            this.spcInhalt.Size = new System.Drawing.Size(1070, 473);
-            this.spcInhalt.SplitterDistance = 220;
-            this.spcInhalt.TabIndex = 4;
-            // 
-            // tlpDetails
-            // 
-            this.tlpDetails.ColumnCount = 1;
-            this.tlpDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDetails.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpDetails.Location = new System.Drawing.Point(0, 0);
-            this.tlpDetails.Name = "tlpDetails";
-            this.tlpDetails.RowCount = 2;
-            this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDetails.Size = new System.Drawing.Size(220, 473);
-            this.tlpDetails.TabIndex = 0;
-            // 
-            // sfdDatei
-            // 
-            this.sfdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
-            // 
-            // ofdDatei
-            // 
-            this.ofdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
-            // 
             // tsbZeichnenmodus
             // 
             this.tsbZeichnenmodus.Checked = true;
@@ -221,6 +206,11 @@
             this.tsbLoeschmodus.Text = "Löschmodus";
             this.tsbLoeschmodus.Click += new System.EventHandler(this.tsbLoeschmodus_Click);
             // 
+            // tssModus
+            // 
+            this.tssModus.Name = "tssModus";
+            this.tssModus.Size = new System.Drawing.Size(6, 31);
+            // 
             // tsbWiedergabe
             // 
             this.tsbWiedergabe.Image = ((System.Drawing.Image)(resources.GetObject("tsbWiedergabe.Image")));
@@ -240,40 +230,71 @@
             this.tsbStop.Text = "Wiedergabe stoppen";
             this.tsbStop.Click += new System.EventHandler(this.tsbStop_Click);
             // 
-            // mnuNeu
+            // spcInhalt
             // 
-            this.mnuNeu.Image = ((System.Drawing.Image)(resources.GetObject("mnuNeu.Image")));
-            this.mnuNeu.Name = "mnuNeu";
-            this.mnuNeu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.mnuNeu.Size = new System.Drawing.Size(291, 22);
-            this.mnuNeu.Text = "Neu";
-            this.mnuNeu.Click += new System.EventHandler(this.mnuNeu_Click);
+            this.spcInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spcInhalt.Location = new System.Drawing.Point(0, 55);
+            this.spcInhalt.Name = "spcInhalt";
             // 
-            // mnuÖffnen
+            // spcInhalt.Panel1
             // 
-            this.mnuÖffnen.Image = ((System.Drawing.Image)(resources.GetObject("mnuÖffnen.Image")));
-            this.mnuÖffnen.Name = "mnuÖffnen";
-            this.mnuÖffnen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuÖffnen.Size = new System.Drawing.Size(291, 22);
-            this.mnuÖffnen.Text = "Öffnen";
-            this.mnuÖffnen.Click += new System.EventHandler(this.mnuÖffnen_Click);
+            this.spcInhalt.Panel1.Controls.Add(this.tlpDetails);
             // 
-            // mnuSpeichern
+            // spcInhalt.Panel2
             // 
-            this.mnuSpeichern.Image = ((System.Drawing.Image)(resources.GetObject("mnuSpeichern.Image")));
-            this.mnuSpeichern.Name = "mnuSpeichern";
-            this.mnuSpeichern.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSpeichern.Size = new System.Drawing.Size(291, 22);
-            this.mnuSpeichern.Text = "Speichern";
-            this.mnuSpeichern.Click += new System.EventHandler(this.mnuSpeichern_Click);
+            this.spcInhalt.Panel2.Controls.Add(this.zazSkala);
+            this.spcInhalt.Panel2.Controls.Add(this.zflInhalt);
+            this.spcInhalt.Panel2.Margin = new System.Windows.Forms.Padding(0, 55, 0, 0);
+            this.spcInhalt.Size = new System.Drawing.Size(1070, 473);
+            this.spcInhalt.SplitterDistance = 220;
+            this.spcInhalt.TabIndex = 4;
             // 
-            // zeitanzeige1
+            // tlpDetails
             // 
-            this.zeitanzeige1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.zeitanzeige1.Location = new System.Drawing.Point(0, 386);
-            this.zeitanzeige1.Name = "zeitanzeige1";
-            this.zeitanzeige1.Size = new System.Drawing.Size(846, 87);
-            this.zeitanzeige1.TabIndex = 2;
+            this.tlpDetails.ColumnCount = 1;
+            this.tlpDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpDetails.Controls.Add(this.lblLinien, 0, 0);
+            this.tlpDetails.Controls.Add(this.lstLinien, 0, 1);
+            this.tlpDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpDetails.Location = new System.Drawing.Point(0, 0);
+            this.tlpDetails.Name = "tlpDetails";
+            this.tlpDetails.RowCount = 2;
+            this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpDetails.Size = new System.Drawing.Size(220, 473);
+            this.tlpDetails.TabIndex = 0;
+            // 
+            // lblLinien
+            // 
+            this.lblLinien.AutoSize = true;
+            this.lblLinien.Location = new System.Drawing.Point(3, 0);
+            this.lblLinien.Name = "lblLinien";
+            this.lblLinien.Size = new System.Drawing.Size(81, 13);
+            this.lblLinien.TabIndex = 0;
+            this.lblLinien.Text = "Linienübersicht:";
+            // 
+            // lstLinien
+            // 
+            this.lstLinien.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstLinien.FormattingEnabled = true;
+            this.lstLinien.Location = new System.Drawing.Point(3, 16);
+            this.lstLinien.Name = "lstLinien";
+            this.lstLinien.Size = new System.Drawing.Size(214, 454);
+            this.lstLinien.TabIndex = 1;
+            this.lstLinien.SelectedIndexChanged += new System.EventHandler(this.lstLinien_SelectedIndexChanged);
+            this.lstLinien.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLinien_KeyDown);
+            this.lstLinien.Leave += new System.EventHandler(this.lstLinien_Leave);
+            // 
+            // zazSkala
+            // 
+            this.zazSkala.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.zazSkala.Location = new System.Drawing.Point(0, 409);
+            this.zazSkala.MaxZeit = 10;
+            this.zazSkala.Name = "zazSkala";
+            this.zazSkala.Size = new System.Drawing.Size(846, 64);
+            this.zazSkala.TabIndex = 2;
+            this.zazSkala.Visible = false;
+            this.zazSkala.Zeitwert = 0;
             // 
             // zflInhalt
             // 
@@ -281,16 +302,26 @@
             this.zflInhalt.ControlModus = Motion_Teach_In.Zeichenfläche.Modus.Zeichenmodus;
             this.zflInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zflInhalt.Location = new System.Drawing.Point(0, 0);
+            this.zflInhalt.MarkierteLinie = null;
             this.zflInhalt.Name = "zflInhalt";
             this.zflInhalt.Size = new System.Drawing.Size(846, 473);
             this.zflInhalt.TabIndex = 1;
+            this.zflInhalt.ModusGeaendert += new Motion_Teach_In.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
             this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
             this.zflInhalt.WiedergabeGestoppt += new System.EventHandler(this.zflInhalt_WiedergabeGestoppt);
             // 
-            // timer1
+            // sfdDatei
             // 
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.sfdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
+            // 
+            // ofdDatei
+            // 
+            this.ofdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
+            // 
+            // tmrWiedergabe
+            // 
+            this.tmrWiedergabe.Interval = 250;
+            this.tmrWiedergabe.Tick += new System.EventHandler(this.tmrWiedergabe_Tick);
             // 
             // frmMain
             // 
@@ -304,6 +335,7 @@
             this.Name = "frmMain";
             this.Text = "Motion Teach-In";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.mnuMenu.ResumeLayout(false);
             this.mnuMenu.PerformLayout();
             this.tsToolbar.ResumeLayout(false);
@@ -312,6 +344,8 @@
             this.spcInhalt.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spcInhalt)).EndInit();
             this.spcInhalt.ResumeLayout(false);
+            this.tlpDetails.ResumeLayout(false);
+            this.tlpDetails.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -341,8 +375,10 @@
         private System.Windows.Forms.TableLayoutPanel tlpDetails;
         private System.Windows.Forms.SaveFileDialog sfdDatei;
         private System.Windows.Forms.OpenFileDialog ofdDatei;
-        private Zeitanzeige zeitanzeige1;
-        private System.Windows.Forms.Timer timer1;
+        private Zeitanzeige zazSkala;
+        private System.Windows.Forms.Timer tmrWiedergabe;
+        private System.Windows.Forms.Label lblLinien;
+        private System.Windows.Forms.ListBox lstLinien;
     }
 }
 

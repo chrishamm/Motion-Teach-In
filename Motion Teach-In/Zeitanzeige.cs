@@ -17,16 +17,18 @@ namespace Motion_Teach_In
             InitializeComponent();
         }
 
-        public int AlleZeit // soll im Timer1_tick angegben werden und die max. größe des slides setzen.
+        // Gibt den maximalen Zeitwert an oder setzt diesen
+        public int MaxZeit
         {
-            get { return AlleZeit; }
-            set { this.slider.Maximum = value; }
+            get { return slider.Maximum; }
+            set { slider.Maximum = value; }
         }
 
-        public void Aktualisieren(Koordinate k) // soll den aktuellen zeit wert der koordinate addieren und im  slider anzeigen.
+        // Gibt den aktuell gesetzten Zeitwert an oder setzt diesen
+        public int Zeitwert
         {
-            this.slider.Value += (int) k.Zeit;
-            
+            get { return slider.Value; }
+            set { slider.Value = Math.Min(slider.Maximum, value); }
         }
     }
 }

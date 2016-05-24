@@ -12,17 +12,26 @@ namespace Motion_Teach_In
 {
     public partial class Zeichenfläche : UserControl
     {
-        public Zeichenfläche()
-        {
-            InitializeComponent();
-        }
-
         #region Fixe Werte
         private static readonly int PunktDurchmesser = 5;   // Durchmesser für gezeichnete Punkte
 
         private static readonly int Loeschhoehe = 5;        // Breite des zu löschenden Rechtecks im Löschmodus
         private static readonly int Loeschbreite = 6;       // Höhe des zu löschenden Rechtecks im Löschmodus
         #endregion
+
+        public Zeichenfläche()
+        {
+            InitializeComponent();
+        }
+
+        private void Zeichenfläche_Load(object sender, EventArgs e)
+        {
+            DoubleBuffered = true;
+
+            datei = new Datei();            // datei darf nie null werden
+            datei.CollectionChanged += Datei_CollectionChanged;
+            stoppuhr = new Stopwatch();     // Zum Messen der zeitlichen Dimension beim Zeichnen
+        }
 
         #region Zustand des Controls
         public enum Modus
@@ -42,6 +51,13 @@ namespace Motion_Teach_In
 
             set
             {
+                // Hat sich der Modus überhaupt verändert?
+                if (aktuellerModus == value)
+                {
+                    // Nein - hier stoppen
+                    return;
+                }
+
                 // Control vor dem Setzen des neuen Modus prüfen und ggf. zurücksetzen
                 switch (ControlModus)
                 {
@@ -69,10 +85,16 @@ namespace Motion_Teach_In
                         numWiedergegebeneLinien = 0;
                         break;
                 }
+
+                Modus alterModus = aktuellerModus;
                 aktuellerModus = value;
+                ModusGeaendert?.Invoke(this, alterModus, value);
             }
         }
         private bool modusAktiv;     // Ist der gewählte Modus gerade aktiv?
+
+        public delegate void ModusGeaendertEvent(object sender, Modus alterModus, Modus neuerModus);
+        public event ModusGeaendertEvent ModusGeaendert;
         #endregion
 
         #region Bindung an die Dateikomponente
@@ -91,21 +113,32 @@ namespace Motion_Teach_In
                     // Wir benötigen stets eine valide Instanz der Dateiklasse...
                     throw new ArgumentNullException();
                 }
+                if (value == datei)
+                {
+                    // Ignorieren wenn die Datei identisch ist
+                    return;
+                }
 
+                Datei alteDatei = datei;
                 datei = value;
                 Refresh();
+
+                alteDatei.CollectionChanged -= Datei_CollectionChanged;
+                datei.CollectionChanged += Datei_CollectionChanged;
+
+                DateiGeaendert?.Invoke(this, alteDatei, datei);
             }
         }
-        #endregion
 
-        // Event welches beim Laden der Form aufgerufen wird
-        private void Zeichenfläche_Load(object sender, EventArgs e)
+        private void Datei_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            DoubleBuffered = true;
-
-            datei = new Datei();            // datei darf nie null werden
-            stoppuhr = new Stopwatch();     // Zum Messen der zeitlichen Dimension beim Zeichnen
+            // Bei Änderungen der Datei soll das Control neu gezeichnet werden...
+            Invalidate();
         }
+
+        public delegate void DateiGeaendertEvent(object sender, Datei alteDatei, Datei neueDatei);
+        public event DateiGeaendertEvent DateiGeaendert;
+        #endregion
 
         #region Events zum Einspeichern von Bewegungen per Touch und per Maus
         private Stopwatch stoppuhr;                 // Zum Erfassen der Zeit zwischen den einzelnen Punkten
@@ -161,7 +194,7 @@ namespace Motion_Teach_In
                     if (zeichnendeLinie.LetzteKoordinate != e.Location)
                     {
                         // Nein - neue Koordinate erzeugen und aufnehmen
-                        zeichnendeLinie.Add(new Koordinate(e.X, e.Y, stoppuhr.ElapsedMilliseconds));
+                        zeichnendeLinie.Add(new Koordinate(e.X, e.Y, (int)stoppuhr.ElapsedMilliseconds));
                         stoppuhr.Restart();
 
                         // Neuen Block zeichnen
@@ -182,8 +215,8 @@ namespace Motion_Teach_In
         #endregion
 
         #region Wiedergabesteuerung
-        private long akkumulierteZeitTotal;
-        private int numWiedergegebeneLinien;       // Wieviele Linien sind schon gezeichnet worden?
+        private int akkumulierteZeitTotal;          // Wieviel ms sind insgesamt seit dem Wiedergabestart abgespielt worden?
+        private int numWiedergegebeneLinien;        // Wieviele Linien sind schon gezeichnet worden?
 
         public event EventHandler WiedergabeGestartet;
         public event EventHandler WiedergabeGestoppt;
@@ -195,6 +228,9 @@ namespace Motion_Teach_In
             {
                 tmrZeichnen.Enabled = true;
                 modusAktiv = true;
+
+                akkumulierteZeitTotal = 0;
+                numWiedergegebeneLinien = 0;
 
                 stoppuhr.Start();
                 Invalidate();
@@ -219,27 +255,15 @@ namespace Motion_Teach_In
         }
 
         // Liefert die Zeit in ms seit dem Wiedergabebeginn zurück
-        public long WiedergabeZeit
+        public int WiedergabeZeit
         {
             get
             {
-                return akkumulierteZeitTotal;
-            }
-        }
-        public long ZeitGesammt
-        {
-            get
-            {
-                int zeit = 0;
-                foreach (Linie l in datei)
+                if (stoppuhr.IsRunning)
                 {
-                    foreach (Koordinate koord in l)
-
-                    {
-                        zeit += (int)koord.Zeit;
-                    }
+                    return akkumulierteZeitTotal + (int)stoppuhr.ElapsedMilliseconds;
                 }
-                return zeit;
+                return akkumulierteZeitTotal;
             }
         }
 
@@ -250,25 +274,65 @@ namespace Motion_Teach_In
         }
         #endregion
 
+        #region Visualisierung des Controls
+        // Standarddarstellung der Punkte
+        private Brush punktPinsel = Brushes.Black;
+        public Brush PunktPinsel
+        {
+            get { return punktPinsel; }
+            set { punktPinsel = value; }
+        }
+
+        private Pen linienPinsel = Pens.DarkGray;
+        public Pen LinienPinsel
+        {
+            get { return linienPinsel; }
+            set { linienPinsel = value; }
+        }
+
+        // Sonderdarstellung für selektierte/markierte Linien
+        private Brush markierterPunktPinsel = Brushes.Red;
+        public Brush MarkierterPunktPinsel
+        {
+            get { return markierterPunktPinsel; }
+            set { markierterPunktPinsel = value; }
+        }
+
+        private Pen markierterLinienPinsel = Pens.DarkRed;
+        public Pen MarkierterLinienPinsel
+        {
+            get { return markierterLinienPinsel; }
+            set { markierterLinienPinsel = value; }
+        }
+
+        // Eigenschaft zum Setzen von markierten Linien
+        private Linie markierteLinie;
+        public Linie MarkierteLinie
+        {
+            get { return markierteLinie; }
+            set
+            {
+                markierteLinie = value;
+                Refresh();
+            }
+        }
+
         // Event wird bei Refresh aufgerufen, zeichnet entweder normal oder zeichnet im Wiedergabemodus "nach"
         private void Zeichenfläche_Paint(object sender, PaintEventArgs e)
         {
-            Brush punktPinsel = Brushes.Black;
-            Pen linienPinsel = Pens.DarkGray;
-
             // Optionen für den Wiedergabemodus
-            long akkumulierteZeit = 0;
+            int akkumulierteZeit = 0;
             int numAktuelleLinie = 0;
 
             // Verbindungslinien zwischen den einzelnen Punkten zeichnen
-             Koordinate letzteKoordinate;
-            foreach(Linie l in datei)
+            Koordinate letzteKoordinate;
+            foreach (Linie l in datei)
             {
                 letzteKoordinate = null;
-                foreach(Koordinate k in l)
+                foreach (Koordinate k in l)
                 {
                     // Kann diese Verbindungslinie im Wiedergabemodus gezeichnet werden?
-                    if (ControlModus == Modus.Wiedergabemodus)
+                    if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
                     {
                         if (numWiedergegebeneLinien == numAktuelleLinie)
                         {
@@ -281,13 +345,12 @@ namespace Motion_Teach_In
                                 akkumulierteZeit += k.Zeit;
                             }
                         }
-                    } 
+                    }
 
                     // Verbindungen zwischen Punkten mit grauer Linie zeichnen
                     if (letzteKoordinate != null)
                     {
-                        e.Graphics.DrawLine(linienPinsel, letzteKoordinate.X, letzteKoordinate.Y, k.X, k.Y);
-                        
+                        e.Graphics.DrawLine((l == markierteLinie) ? markierterLinienPinsel : linienPinsel, letzteKoordinate.X, letzteKoordinate.Y, k.X, k.Y);
                     }
                     letzteKoordinate = k;
                 }
@@ -314,7 +377,7 @@ namespace Motion_Teach_In
                 foreach (Koordinate k in l)
                 {
                     // Kann dieser Punkt im Wiedergabemodus gezeichnet werden?
-                    if (ControlModus == Modus.Wiedergabemodus)
+                    if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
                     {
                         if (numWiedergegebeneLinien == numAktuelleLinie)
                         {
@@ -331,11 +394,12 @@ namespace Motion_Teach_In
                     }
 
                     // Punkte als Rechteck zeichnen
-                    e.Graphics.FillEllipse(punktPinsel, k.X - PunktDurchmesser / 2, k.Y - PunktDurchmesser / 2, PunktDurchmesser, PunktDurchmesser);
+                    e.Graphics.FillEllipse((l == markierteLinie) ? markierterPunktPinsel : punktPinsel,
+                        k.X - PunktDurchmesser / 2, k.Y - PunktDurchmesser / 2, PunktDurchmesser, PunktDurchmesser);
                 }
 
-                if (ControlModus == Modus.Wiedergabemodus)
-                {   
+                if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
+                {
                     if (numWiedergegebeneLinien == numAktuelleLinie && !wiedergabeUnterbrochen)
                     {
                         // Aktuelle Linie konnte ohne Unterbrechung gezeichnet werden, also mit der nächsten weitermachen
@@ -354,10 +418,14 @@ namespace Motion_Teach_In
             }
 
             // Wiedergabe abgeschlossen?
-            if (ControlModus == Modus.Wiedergabemodus && !wiedergabeUnterbrochen && numAktuelleLinie == datei.Count)
+            if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
             {
-                WiedergabeStoppen();
+                if (!wiedergabeUnterbrochen && numAktuelleLinie == datei.Count)
+                {
+                    WiedergabeStoppen();
+                }
             }
         }
+        #endregion
     }
 }
