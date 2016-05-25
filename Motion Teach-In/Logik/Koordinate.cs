@@ -6,9 +6,9 @@ namespace Motion_Teach_In
     {
         public int X;           // X-Koordinate
         public int Y;           // Y-Koordinate
-        public long Zeit;       // Dauer der Bewegung vom letzten Punkt aus gesehen in ms
+        public int Zeit;        // Dauer der Bewegung vom letzten Punkt aus gesehen in ms
 
-        public Koordinate(int x, int y, long zeit)
+        public Koordinate(int x, int y, int zeit)
         {
             X = x;
             Y = y;

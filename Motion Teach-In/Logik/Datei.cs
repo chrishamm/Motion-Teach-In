@@ -16,7 +16,7 @@ using System.Collections.Specialized;
 // Zur Speicherung dieser Informationen werden alle Koordinaten in dem folgenden
 // Format in einer SQLite-Tabelle names "Koordinaten" abgespeichert:
 //
-// Linie (int) | X (int) | Y (int) | Zeit (long, in ms)
+// Linie (int) | X (int) | Y (int) | Zeit (int, in ms)
 // Bei anderen DB-Systemen könnte es erforderlich sein einen "id"-Schlüssel zur
 // Beibehaltung der Reihenfolge anzulegen.
 namespace Motion_Teach_In
@@ -68,7 +68,7 @@ namespace Motion_Teach_In
 
                 int x = reader.GetInt32(1);
                 int y = reader.GetInt32(2);
-                long zeit = reader.GetInt64(3);
+                int zeit = reader.GetInt32(3);
                 linie.Add(new Koordinate(x, y, zeit));
             }
 
@@ -150,6 +150,23 @@ namespace Motion_Teach_In
             base.OnCollectionChanged(e);
         }
         #endregion
+
+        // Liefert die gesamte Zeichendauer der einzelnen Koordinaten zurück
+        public int ZeitGesamt
+        {
+            get
+            {
+                int zeit = 0;
+                foreach (Linie l in this)
+                {
+                    foreach (Koordinate koord in l)
+                    {
+                        zeit += koord.Zeit;
+                    }
+                }
+                return zeit;
+            }
+        }
 
         // Lösche alle Punkte im Rechteck lb x lh um den Punkt x, y
         // Liefert true zurück, wenn Punkte gelöscht worden sind
