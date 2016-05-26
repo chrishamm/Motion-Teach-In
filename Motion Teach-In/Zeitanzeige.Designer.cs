@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.slider = new System.Windows.Forms.TrackBar();
-            this.skala = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.slider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,21 +40,10 @@
             this.slider.Size = new System.Drawing.Size(736, 45);
             this.slider.TabIndex = 0;
             // 
-            // skala
-            // 
-            this.skala.AutoSize = true;
-            this.skala.Dock = System.Windows.Forms.DockStyle.Top;
-            this.skala.Location = new System.Drawing.Point(0, 45);
-            this.skala.Name = "skala";
-            this.skala.Size = new System.Drawing.Size(126, 13);
-            this.skala.TabIndex = 1;
-            this.skala.Text = "hier kommt eine skala hin";
-            // 
             // Zeitanzeige
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.skala);
             this.Controls.Add(this.slider);
             this.Name = "Zeitanzeige";
             this.Size = new System.Drawing.Size(736, 64);
@@ -68,6 +56,5 @@
         #endregion
 
         private System.Windows.Forms.TrackBar slider;
-        private System.Windows.Forms.Label skala;
     }
 }

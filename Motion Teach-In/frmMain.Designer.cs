@@ -52,11 +52,11 @@
             this.tlpDetails = new System.Windows.Forms.TableLayoutPanel();
             this.lblLinien = new System.Windows.Forms.Label();
             this.lstLinien = new System.Windows.Forms.ListBox();
-            this.zazSkala = new Motion_Teach_In.Zeitanzeige();
-            this.zflInhalt = new Motion_Teach_In.Zeichenfläche();
             this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
             this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
             this.tmrWiedergabe = new System.Windows.Forms.Timer(this.components);
+            this.zazSkala = new Motion_Teach_In.Zeitanzeige();
+            this.zflInhalt = new Motion_Teach_In.Zeichenfläche();
             this.mnuMenu.SuspendLayout();
             this.tsToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spcInhalt)).BeginInit();
@@ -285,11 +285,26 @@
             this.lstLinien.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLinien_KeyDown);
             this.lstLinien.Leave += new System.EventHandler(this.lstLinien_Leave);
             // 
+            // sfdDatei
+            // 
+            this.sfdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
+            // 
+            // ofdDatei
+            // 
+            this.ofdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
+            // 
+            // tmrWiedergabe
+            // 
+            this.tmrWiedergabe.Interval = 250;
+            this.tmrWiedergabe.Tick += new System.EventHandler(this.tmrWiedergabe_Tick);
+            // 
             // zazSkala
             // 
-            this.zazSkala.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.zazSkala.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.zazSkala.Location = new System.Drawing.Point(0, 409);
-            this.zazSkala.MaxZeit = 10;
+            this.zazSkala.MaxZeit = 0;
             this.zazSkala.Name = "zazSkala";
             this.zazSkala.Size = new System.Drawing.Size(846, 64);
             this.zazSkala.TabIndex = 2;
@@ -309,19 +324,6 @@
             this.zflInhalt.ModusGeaendert += new Motion_Teach_In.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
             this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
             this.zflInhalt.WiedergabeGestoppt += new System.EventHandler(this.zflInhalt_WiedergabeGestoppt);
-            // 
-            // sfdDatei
-            // 
-            this.sfdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
-            // 
-            // ofdDatei
-            // 
-            this.ofdDatei.Filter = "Motion Teach-In Dateien (*.mti)|*.mti|Alle Dateien (*.*)|*.*";
-            // 
-            // tmrWiedergabe
-            // 
-            this.tmrWiedergabe.Interval = 250;
-            this.tmrWiedergabe.Tick += new System.EventHandler(this.tmrWiedergabe_Tick);
             // 
             // frmMain
             // 

@@ -35,7 +35,11 @@ namespace Motion_Teach_In
         private void tsbWiedergabe_Click(object sender, EventArgs e)
         {
             zflInhalt.ControlModus = Zeichenfläche.Modus.Wiedergabemodus;
+            zazSkala.SkalaLöschen();
+            zazSkala.SkalaBerechnen(zflInhalt.Datei.ZeitGesamt);
             zflInhalt.WiedergabeStarten();
+            
+
         }
 
         private void tsbStop_Click(object sender, EventArgs e)

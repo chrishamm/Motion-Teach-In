@@ -237,6 +237,7 @@ namespace Motion_Teach_In
 
                 WiedergabeGestartet?.Invoke(this, new EventArgs());
             }
+            
         }
 
         // Stoppt die Wiedergabe der eingegebenen Bewegungen
