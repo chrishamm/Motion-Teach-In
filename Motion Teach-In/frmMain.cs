@@ -35,11 +35,7 @@ namespace Motion_Teach_In
         private void tsbWiedergabe_Click(object sender, EventArgs e)
         {
             zflInhalt.ControlModus = Zeichenfläche.Modus.Wiedergabemodus;
-            zazSkala.SkalaLöschen();
-            zazSkala.SkalaBerechnen(zflInhalt.Datei.ZeitGesamt);
             zflInhalt.WiedergabeStarten();
-            
-
         }
 
         private void tsbStop_Click(object sender, EventArgs e)
@@ -119,7 +115,7 @@ namespace Motion_Teach_In
         }
         #endregion
 
-        #region Ereignisbehandlung für das Zeichencontrol
+        #region Ereignisbehandlung der Zeichenfläche
         private void zflInhalt_ModusGeaendert(object sender, Zeichenfläche.Modus alterModus, Zeichenfläche.Modus neuerModus)
         {
             tsbZeichnenmodus.Checked = (neuerModus == Zeichenfläche.Modus.Zeichenmodus);
@@ -155,15 +151,23 @@ namespace Motion_Teach_In
         {
             // Listener für Linienänderungen einbauen
             neueDatei.CollectionChanged += Datei_CollectionChanged;
+
+            // Listbox der Linien neu füllen
+            LinienAktualisieren();
         }
 
         private void Datei_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // Listbox aktualisieren
+            LinienAktualisieren();
+        }
+
+        private void LinienAktualisieren()
+        {
             lstLinien.BeginUpdate();
             lstLinien.Items.Clear();
             int counter = 1;
-            foreach(Linie l in (Datei)sender)
+            foreach(Linie l in zflInhalt.Datei)
             {
                 lstLinien.Items.Add(String.Format("Linie {0}", counter));
                 counter++;
@@ -193,6 +197,14 @@ namespace Motion_Teach_In
             // Markierungen sind aktuell nur zulässig wenn der Fokus in der Listbox liegt
             lstLinien.SelectedIndex = -1;
             zflInhalt.MarkierteLinie = null;
+        }
+        #endregion
+
+        #region Ereignisbehandlung der Zeitanzeige
+        // Zeichenfläche bei Änderung des Sliders anpassen
+        private void zazSkala_SliderBewegt(object sender, EventArgs e)
+        {
+            zflInhalt.WiedergabeZeit = zazSkala.Zeitwert;
         }
         #endregion
     }

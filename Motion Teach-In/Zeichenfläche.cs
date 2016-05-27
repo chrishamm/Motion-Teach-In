@@ -217,6 +217,7 @@ namespace Motion_Teach_In
         #region Wiedergabesteuerung
         private int akkumulierteZeitTotal;          // Wieviel ms sind insgesamt seit dem Wiedergabestart abgespielt worden?
         private int numWiedergegebeneLinien;        // Wieviele Linien sind schon gezeichnet worden?
+        private int stoppuhrOffset;                 // Offset in ms fürs manuelle Setzen der wiedergegebenen Zeit
 
         public event EventHandler WiedergabeGestartet;
         public event EventHandler WiedergabeGestoppt;
@@ -231,6 +232,7 @@ namespace Motion_Teach_In
 
                 akkumulierteZeitTotal = 0;
                 numWiedergegebeneLinien = 0;
+                stoppuhrOffset = 0;
 
                 stoppuhr.Start();
                 Invalidate();
@@ -255,16 +257,59 @@ namespace Motion_Teach_In
             }
         }
 
-        // Liefert die Zeit in ms seit dem Wiedergabebeginn zurück
+        // Liefert die Zeit in ms seit dem Wiedergabebeginn zurück und setzt diese bei Bedarf
         public int WiedergabeZeit
         {
             get
             {
                 if (stoppuhr.IsRunning)
                 {
-                    return akkumulierteZeitTotal + (int)stoppuhr.ElapsedMilliseconds;
+                    return akkumulierteZeitTotal + (int)stoppuhr.ElapsedMilliseconds + stoppuhrOffset;
                 }
                 return akkumulierteZeitTotal;
+            }
+
+            set
+            {
+                // Wiedergabeparameter zurücksetzen
+                akkumulierteZeitTotal = 0;
+                numWiedergegebeneLinien = 0;
+                stoppuhrOffset = 0;
+
+                // Ermitteln wieviele Linien gezeichnet werden können und zeitliches Offset für die Stoppuhr ermitteln
+                foreach(Linie l in datei)
+                {
+                    bool wiedergabeUnterbrochen = false;
+                    foreach (Koordinate koord in l)
+                    {
+                        if (akkumulierteZeitTotal + koord.Zeit > value)
+                        {
+                            // Bis zu dieser Koordinate soll gezeichnet werden
+                            wiedergabeUnterbrochen = true;
+                            break;
+                        }
+                        akkumulierteZeitTotal += koord.Zeit;
+                        stoppuhrOffset += koord.Zeit;
+                    }
+
+                    if (wiedergabeUnterbrochen)
+                    {
+                        break;
+                    }
+
+                    stoppuhrOffset = 0;
+                    numWiedergegebeneLinien++;
+                }
+
+                // Werte übernehmen
+                if (ControlModus == Modus.Wiedergabemodus)
+                {
+                    if (modusAktiv)
+                    {
+                        stoppuhr.Restart();
+                    }
+                    Invalidate();
+                }
             }
         }
 
@@ -333,11 +378,11 @@ namespace Motion_Teach_In
                 foreach (Koordinate k in l)
                 {
                     // Kann diese Verbindungslinie im Wiedergabemodus gezeichnet werden?
-                    if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
+                    if (ControlModus == Modus.Wiedergabemodus)
                     {
                         if (numWiedergegebeneLinien == numAktuelleLinie)
                         {
-                            if (akkumulierteZeit + k.Zeit > stoppuhr.ElapsedMilliseconds)
+                            if (akkumulierteZeit + k.Zeit > stoppuhr.ElapsedMilliseconds + stoppuhrOffset)
                             {
                                 break;
                             }
@@ -378,11 +423,11 @@ namespace Motion_Teach_In
                 foreach (Koordinate k in l)
                 {
                     // Kann dieser Punkt im Wiedergabemodus gezeichnet werden?
-                    if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
+                    if (ControlModus == Modus.Wiedergabemodus)
                     {
                         if (numWiedergegebeneLinien == numAktuelleLinie)
                         {
-                            if (akkumulierteZeit + k.Zeit > stoppuhr.ElapsedMilliseconds)
+                            if (akkumulierteZeit + k.Zeit > stoppuhr.ElapsedMilliseconds + stoppuhrOffset)
                             {
                                 wiedergabeUnterbrochen = true;
                                 break;
@@ -394,14 +439,14 @@ namespace Motion_Teach_In
                         }
                     }
 
-                    // Punkte als Rechteck zeichnen
+                    // Punkte als Kreise zeichnen
                     e.Graphics.FillEllipse((l == markierteLinie) ? markierterPunktPinsel : punktPinsel,
                         k.X - PunktDurchmesser / 2, k.Y - PunktDurchmesser / 2, PunktDurchmesser, PunktDurchmesser);
                 }
 
-                if (ControlModus == Modus.Wiedergabemodus && modusAktiv)
+                if (ControlModus == Modus.Wiedergabemodus)
                 {
-                    if (numWiedergegebeneLinien == numAktuelleLinie && !wiedergabeUnterbrochen)
+                    if (numWiedergegebeneLinien == numAktuelleLinie && !wiedergabeUnterbrochen && modusAktiv)
                     {
                         // Aktuelle Linie konnte ohne Unterbrechung gezeichnet werden, also mit der nächsten weitermachen
                         numWiedergegebeneLinien++;
