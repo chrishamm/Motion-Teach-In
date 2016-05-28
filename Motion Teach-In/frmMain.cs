@@ -152,6 +152,9 @@ namespace Motion_Teach_In
             // Listener für Linienänderungen einbauen
             neueDatei.CollectionChanged += Datei_CollectionChanged;
 
+              zazSkala.MaxZeit = neueDatei.ZeitGesamt;
+            zazSkala.Zeitwert = neueDatei.ZeitGesamt;
+
             // Listbox der Linien neu füllen
             LinienAktualisieren();
         }

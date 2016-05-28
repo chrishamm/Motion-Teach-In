@@ -166,6 +166,7 @@ namespace Motion_Teach_In
                 }
                 return zeit;
             }
+            set { ZeitGesamt = value; }
         }
 
         // Lösche alle Punkte im Rechteck lb x lh um den Punkt x, y
