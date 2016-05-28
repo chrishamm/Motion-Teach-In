@@ -17,75 +17,71 @@ namespace Motion_Teach_In
             InitializeComponent();
         }
 
+        // Legt Labels als Skaleninformationen an
+        static readonly int paddingLabel = 16;          // in px. Gibt den Abstand des Sliders vom Rand an
+        static readonly int maxSkalenSegmente = 20;
+        static readonly int minLabelGroesse = 40;       // in px. Gibt die minimale Breite eines Labels an
+
         // Gibt den maximalen Zeitwert an oder setzt diesen
         public int MaxZeit
         {
             get { return slider.Maximum; }
-            set { slider.Maximum = (value/1000) + 1; } //skala soll sekunden anzeigen, dient der übersicht
+            set
+            {
+                // Slider anpassen
+                slider.Maximum = value;
+
+                // Anzahl und Größe der einzelnen Labels berechnen
+                int segmentanzahl = Math.Min(MaxZeit / 1000 + 1, maxSkalenSegmente);
+                int segmentlänge = Math.Max((pnlLabels.Width - paddingLabel * 2) / segmentanzahl, minLabelGroesse);
+
+                // Neue Labels mit den Angaben der Sekunden und Parametern erzeugen
+                pnlLabels.Controls.Clear();
+                for (int i = 0; i <= segmentanzahl; i++)
+                {
+                    Label lb = new Label();
+                    lb.Text = ((MaxZeit / 1000.0) * ((float)i / (float)segmentanzahl)).ToString("0.0") + " s";
+                    lb.AutoSize = true;
+                    lb.Location = new Point(segmentlänge * i + paddingLabel, pnlLabels.Padding.Top);
+                    pnlLabels.Controls.Add(lb);
+                }
+
+                // Alle Labels zentrieren
+                foreach (Control control in pnlLabels.Controls)
+                {
+                    Label lb = (Label)control;
+                    lb.Location = new Point(Math.Max(0, lb.Location.X - lb.Width / 2), pnlLabels.Padding.Top);
+                }
+            }
         }
 
         // Gibt den aktuell gesetzten Zeitwert an oder setzt diesen
         public int Zeitwert
         {
             get { return slider.Value; }
-            set { slider.Value = Math.Min(slider.Maximum, value/1000); }
+            set { slider.Value = Math.Min(slider.Maximum, value); }
         }
 
-        //enthält alle erzeugte labels, wichtig beim späteren löschen
-        List<Label>  Labelliste = new List<Label>(); 
-
-        //errechnet die skalenwerte anhand der maximalen zeit
-        public void SkalaBerechnen(int Zeitabsolut) 
+        // Positioniert die Labels bei Größenänderungen neu
+        private void pnlLabels_Resize(object sender, EventArgs e)
         {
-            //berechnen der skalenwertanzahl und der länge
-            int segmentanzahl = Zeitabsolut / 1000 + 1; 
-            int segmentlänge = (this.Width/segmentanzahl);
+            // Labels neu positionieren
+            int segmentanzahl = Math.Min(MaxZeit / 1000 + 1, maxSkalenSegmente);
+            int segmentlänge = Math.Max((pnlLabels.Width - paddingLabel * 2) / segmentanzahl, minLabelGroesse);
 
-            if (segmentanzahl <= 30)
+            for (int i = 0; i < pnlLabels.Controls.Count; i++)
             {
-                //erzeugen neuer labels mit den angaben der sekunden und parametern (name,location...)
-                for (int i = 0; i <= segmentanzahl; i++)
-                {
-                    Label lb = new Label();
-                    lb.Name = "Label" + i.ToString();
-                    lb.Text = i.ToString() + "s";
-                    Labelliste.Add(lb);
-                    lb.Location = new System.Drawing.Point(segmentlänge*i, slider.Height);
-                    lb.AutoSize = true;
-                    this.Controls.Add(lb);
-
-                }
+                Label lb = (Label)pnlLabels.Controls[i];
+                lb.Location = new Point(segmentlänge * i + paddingLabel - lb.Width / 2, pnlLabels.Padding.Top);
             }
-            else
-            {
-                 segmentanzahl = Zeitabsolut / 10000 + 1;
-                 segmentlänge = (this.Width / segmentanzahl);
-                MaxZeit = Zeitabsolut/10 ;
-                for (int i = 0; i <= segmentanzahl; i++)
-                {
-                    Label lb = new Label();
-                    lb.Name = "Label" + i.ToString();
-                    lb.Text = i.ToString() + "0s";
-                    Labelliste.Add(lb);
-                    lb.Location = new System.Drawing.Point(segmentlänge * i, slider.Height);
-                    lb.AutoSize = true;
-                    this.Controls.Add(lb);
-
-                }
-            }
-
         }
 
-        public void SkalaLöschen()
+        // Event zur Benachrichtigung bei manuellem Ändern des Sliders
+        public event EventHandler SliderBewegt;
+
+        private void slider_Scroll(object sender, EventArgs e)
         {
-            if (Labelliste.Count != 0)
-            {
-                foreach (Label name in Labelliste)
-                {
-                    this.Controls.Remove(name);
-                }
-            }
-            
+            SliderBewegt?.Invoke(sender, e);
         }
     }
 }
