@@ -15,8 +15,8 @@ namespace Motion_Teach_In
         #region Fixe Werte
         private static readonly int PunktDurchmesser = 5;   // Durchmesser für gezeichnete Punkte
 
-        private static readonly int Loeschhoehe = 5;        // Breite des zu löschenden Rechtecks im Löschmodus
-        private static readonly int Loeschbreite = 6;       // Höhe des zu löschenden Rechtecks im Löschmodus
+        private static readonly int Loeschhoehe = 15;        // Breite des zu löschenden Rechtecks im Löschmodus
+        private static readonly int Loeschbreite = 16;       // Höhe des zu löschenden Rechtecks im Löschmodus
         #endregion
 
         public Zeichenfläche()
