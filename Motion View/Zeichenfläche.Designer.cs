@@ -1,4 +1,4 @@
-﻿namespace Motion_Teach_In
+﻿namespace Motion_View
 {
     partial class Zeichenfläche
     {

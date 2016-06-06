@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -19,12 +14,10 @@ using System.Collections.Specialized;
 // Linie (int) | X (int) | Y (int) | Zeit (int, in ms)
 // Bei anderen DB-Systemen könnte es erforderlich sein einen "id"-Schlüssel zur
 // Beibehaltung der Reihenfolge anzulegen.
-namespace Motion_Teach_In
+namespace Motion_Model
 {
     public class Datei : ObservableCollection<Linie>
     {
-        SQLiteConnection sqliteConnection;
-
         #region Methoden und Felder für Dateizugriff
         string dateiname;
         public string Dateiname
@@ -45,7 +38,7 @@ namespace Motion_Teach_In
         public Datei(string filename)
         {
             // Verbindung zur Datenquelle herstellen
-            sqliteConnection = new SQLiteConnection("Data Source=" + filename);
+            SQLiteConnection sqliteConnection = new SQLiteConnection("Data Source=" + filename);
             sqliteConnection.Open();
             dateiname = filename;
 
@@ -79,11 +72,13 @@ namespace Motion_Teach_In
         // Speichert diese Instanz in einer SQLite-Datenbank
         public void Speichern(string filename)
         {
+            // Verbindung zur Datenquelle herstellen
+            SQLiteConnection sqliteConnection = new SQLiteConnection("Data Source=" + filename);
+            sqliteConnection.Open();
+
+            // Wenn die Datei zum ersten mal oder unter einem anderen Namen gespeichert wird
             if (dateiname != filename)
             {
-                // Verbindung zur Datenquelle herstellen
-                sqliteConnection = new SQLiteConnection("Data Source=" + filename);
-                sqliteConnection.Open();
                 dateiname = filename;
 
                 // Tabelle "Koordinaten" anlegen
@@ -166,7 +161,6 @@ namespace Motion_Teach_In
                 }
                 return zeit;
             }
-            set { ZeitGesamt = value; }
         }
 
         // Lösche alle Punkte im Rechteck lb x lh um den Punkt x, y

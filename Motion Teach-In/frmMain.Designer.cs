@@ -1,4 +1,6 @@
-﻿namespace Motion_Teach_In
+﻿using Motion_View;
+
+namespace Motion_Teach_In
 {
     partial class frmMain
     {
@@ -43,17 +45,20 @@
             this.mnuHilfe = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuÜber = new System.Windows.Forms.ToolStripMenuItem();
             this.tsToolbar = new System.Windows.Forms.ToolStrip();
+            this.tsbBewegen = new System.Windows.Forms.ToolStripButton();
             this.tsbZeichnenmodus = new System.Windows.Forms.ToolStripButton();
             this.tsbLoeschmodus = new System.Windows.Forms.ToolStripButton();
             this.tssModus = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbWiedergabe = new System.Windows.Forms.ToolStripButton();
-            this.tsbStop = new System.Windows.Forms.ToolStripButton();
+            this.tsbWiedergabeStarten = new System.Windows.Forms.ToolStripButton();
+            this.tsbWiedergabeStoppen = new System.Windows.Forms.ToolStripButton();
+            this.tssWiedergabe = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbUrsprungFestlegen = new System.Windows.Forms.ToolStripButton();
             this.spcInhalt = new System.Windows.Forms.SplitContainer();
             this.tlpDetails = new System.Windows.Forms.TableLayoutPanel();
             this.lblLinien = new System.Windows.Forms.Label();
             this.lstLinien = new System.Windows.Forms.ListBox();
-            this.zazSkala = new Motion_Teach_In.Zeitanzeige();
-            this.zflInhalt = new Motion_Teach_In.Zeichenfläche();
+            this.zflInhalt = new Motion_View.Zeichenfläche();
+            this.zazSkala = new Motion_View.Zeitanzeige();
             this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
             this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
             this.tmrWiedergabe = new System.Windows.Forms.Timer(this.components);
@@ -174,16 +179,29 @@
             // 
             this.tsToolbar.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbBewegen,
             this.tsbZeichnenmodus,
             this.tsbLoeschmodus,
             this.tssModus,
-            this.tsbWiedergabe,
-            this.tsbStop});
+            this.tsbWiedergabeStarten,
+            this.tsbWiedergabeStoppen,
+            this.tssWiedergabe,
+            this.tsbUrsprungFestlegen});
             this.tsToolbar.Location = new System.Drawing.Point(0, 24);
             this.tsToolbar.Name = "tsToolbar";
             this.tsToolbar.Size = new System.Drawing.Size(1070, 31);
             this.tsToolbar.TabIndex = 3;
             this.tsToolbar.Text = "Toolbar";
+            // 
+            // tsbBewegen
+            // 
+            this.tsbBewegen.Enabled = false;
+            this.tsbBewegen.Image = ((System.Drawing.Image)(resources.GetObject("tsbBewegen.Image")));
+            this.tsbBewegen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbBewegen.Name = "tsbBewegen";
+            this.tsbBewegen.Size = new System.Drawing.Size(83, 28);
+            this.tsbBewegen.Text = "Bewegen";
+            this.tsbBewegen.Click += new System.EventHandler(this.tsbBewegen_Click);
             // 
             // tsbZeichnenmodus
             // 
@@ -193,8 +211,8 @@
             this.tsbZeichnenmodus.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbZeichnenmodus.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbZeichnenmodus.Name = "tsbZeichnenmodus";
-            this.tsbZeichnenmodus.Size = new System.Drawing.Size(114, 28);
-            this.tsbZeichnenmodus.Text = "Zeichenmodus";
+            this.tsbZeichnenmodus.Size = new System.Drawing.Size(84, 28);
+            this.tsbZeichnenmodus.Text = "Zeichnen";
             this.tsbZeichnenmodus.Click += new System.EventHandler(this.tsbZeichnenmodus_Click);
             // 
             // tsbLoeschmodus
@@ -202,8 +220,8 @@
             this.tsbLoeschmodus.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoeschmodus.Image")));
             this.tsbLoeschmodus.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbLoeschmodus.Name = "tsbLoeschmodus";
-            this.tsbLoeschmodus.Size = new System.Drawing.Size(103, 28);
-            this.tsbLoeschmodus.Text = "Löschmodus";
+            this.tsbLoeschmodus.Size = new System.Drawing.Size(79, 28);
+            this.tsbLoeschmodus.Text = "Löschen";
             this.tsbLoeschmodus.Click += new System.EventHandler(this.tsbLoeschmodus_Click);
             // 
             // tssModus
@@ -211,24 +229,38 @@
             this.tssModus.Name = "tssModus";
             this.tssModus.Size = new System.Drawing.Size(6, 31);
             // 
-            // tsbWiedergabe
+            // tsbWiedergabeStarten
             // 
-            this.tsbWiedergabe.Image = ((System.Drawing.Image)(resources.GetObject("tsbWiedergabe.Image")));
-            this.tsbWiedergabe.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbWiedergabe.Name = "tsbWiedergabe";
-            this.tsbWiedergabe.Size = new System.Drawing.Size(98, 28);
-            this.tsbWiedergabe.Text = "Wiedergabe";
-            this.tsbWiedergabe.Click += new System.EventHandler(this.tsbWiedergabe_Click);
+            this.tsbWiedergabeStarten.Image = ((System.Drawing.Image)(resources.GetObject("tsbWiedergabeStarten.Image")));
+            this.tsbWiedergabeStarten.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbWiedergabeStarten.Name = "tsbWiedergabeStarten";
+            this.tsbWiedergabeStarten.Size = new System.Drawing.Size(137, 28);
+            this.tsbWiedergabeStarten.Text = "Wiedergabe starten";
+            this.tsbWiedergabeStarten.Click += new System.EventHandler(this.tsbWiedergabe_Click);
             // 
-            // tsbStop
+            // tsbWiedergabeStoppen
             // 
-            this.tsbStop.Enabled = false;
-            this.tsbStop.Image = ((System.Drawing.Image)(resources.GetObject("tsbStop.Image")));
-            this.tsbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbStop.Name = "tsbStop";
-            this.tsbStop.Size = new System.Drawing.Size(144, 28);
-            this.tsbStop.Text = "Wiedergabe stoppen";
-            this.tsbStop.Click += new System.EventHandler(this.tsbStop_Click);
+            this.tsbWiedergabeStoppen.Enabled = false;
+            this.tsbWiedergabeStoppen.Image = ((System.Drawing.Image)(resources.GetObject("tsbWiedergabeStoppen.Image")));
+            this.tsbWiedergabeStoppen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbWiedergabeStoppen.Name = "tsbWiedergabeStoppen";
+            this.tsbWiedergabeStoppen.Size = new System.Drawing.Size(144, 28);
+            this.tsbWiedergabeStoppen.Text = "Wiedergabe stoppen";
+            this.tsbWiedergabeStoppen.Click += new System.EventHandler(this.tsbStop_Click);
+            // 
+            // tssWiedergabe
+            // 
+            this.tssWiedergabe.Name = "tssWiedergabe";
+            this.tssWiedergabe.Size = new System.Drawing.Size(6, 31);
+            // 
+            // tsbUrsprungFestlegen
+            // 
+            this.tsbUrsprungFestlegen.Enabled = false;
+            this.tsbUrsprungFestlegen.Image = ((System.Drawing.Image)(resources.GetObject("tsbUrsprungFestlegen.Image")));
+            this.tsbUrsprungFestlegen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbUrsprungFestlegen.Name = "tsbUrsprungFestlegen";
+            this.tsbUrsprungFestlegen.Size = new System.Drawing.Size(135, 28);
+            this.tsbUrsprungFestlegen.Text = "Ursprung festlegen";
             // 
             // spcInhalt
             // 
@@ -242,8 +274,8 @@
             // 
             // spcInhalt.Panel2
             // 
-            this.spcInhalt.Panel2.Controls.Add(this.zazSkala);
             this.spcInhalt.Panel2.Controls.Add(this.zflInhalt);
+            this.spcInhalt.Panel2.Controls.Add(this.zazSkala);
             this.spcInhalt.Panel2.Margin = new System.Windows.Forms.Padding(0, 55, 0, 0);
             this.spcInhalt.Size = new System.Drawing.Size(1070, 473);
             this.spcInhalt.SplitterDistance = 220;
@@ -285,34 +317,36 @@
             this.lstLinien.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLinien_KeyDown);
             this.lstLinien.Leave += new System.EventHandler(this.lstLinien_Leave);
             // 
+            // zflInhalt
+            // 
+            this.zflInhalt.BackColor = System.Drawing.Color.Green;
+            this.zflInhalt.ControlModus = Motion_View.Zeichenfläche.Modus.Zeichenmodus;
+            this.zflInhalt.Cursor = System.Windows.Forms.Cursors.Default;
+            this.zflInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.zflInhalt.Location = new System.Drawing.Point(0, 0);
+            this.zflInhalt.MarkierteLinie = null;
+            this.zflInhalt.Name = "zflInhalt";
+            this.zflInhalt.Size = new System.Drawing.Size(846, 392);
+            this.zflInhalt.TabIndex = 0;
+            this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
+            this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
+            this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
+            this.zflInhalt.WiedergabeGestoppt += new System.EventHandler(this.zflInhalt_WiedergabeGestoppt);
+            // 
             // zazSkala
             // 
             this.zazSkala.AutoSize = true;
             this.zazSkala.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.zazSkala.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.zazSkala.Location = new System.Drawing.Point(0, 395);
-            this.zazSkala.MaxZeit = 0;
+            this.zazSkala.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.zazSkala.Location = new System.Drawing.Point(0, 392);
+            this.zazSkala.MaxZeit = 10;
             this.zazSkala.Name = "zazSkala";
-            this.zazSkala.Size = new System.Drawing.Size(846, 78);
-            this.zazSkala.TabIndex = 2;
+            this.zazSkala.Size = new System.Drawing.Size(846, 81);
+            this.zazSkala.TabIndex = 1;
             this.zazSkala.Visible = false;
             this.zazSkala.Zeitwert = 0;
             this.zazSkala.SliderBewegt += new System.EventHandler(this.zazSkala_SliderBewegt);
-            // 
-            // zflInhalt
-            // 
-            this.zflInhalt.BackColor = System.Drawing.Color.Green;
-            this.zflInhalt.ControlModus = Motion_Teach_In.Zeichenfläche.Modus.Zeichenmodus;
-            this.zflInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zflInhalt.Location = new System.Drawing.Point(0, 0);
-            this.zflInhalt.MarkierteLinie = null;
-            this.zflInhalt.Name = "zflInhalt";
-            this.zflInhalt.Size = new System.Drawing.Size(846, 473);
-            this.zflInhalt.TabIndex = 1;
-            this.zflInhalt.ModusGeaendert += new Motion_Teach_In.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
-            this.zflInhalt.DateiGeaendert += new Motion_Teach_In.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
-            this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
-            this.zflInhalt.WiedergabeGestoppt += new System.EventHandler(this.zflInhalt_WiedergabeGestoppt);
             // 
             // sfdDatei
             // 
@@ -370,10 +404,9 @@
         private System.Windows.Forms.ToolStripButton tsbZeichnenmodus;
         private System.Windows.Forms.ToolStripButton tsbLoeschmodus;
         private System.Windows.Forms.ToolStripSeparator tssModus;
-        private System.Windows.Forms.ToolStripButton tsbWiedergabe;
-        private System.Windows.Forms.ToolStripButton tsbStop;
+        private System.Windows.Forms.ToolStripButton tsbWiedergabeStarten;
+        private System.Windows.Forms.ToolStripButton tsbWiedergabeStoppen;
         private System.Windows.Forms.SplitContainer spcInhalt;
-        private Zeichenfläche zflInhalt;
         private System.Windows.Forms.ToolStripMenuItem mnuÜber;
         private System.Windows.Forms.ToolStripMenuItem mnuTransfer;
         private System.Windows.Forms.ToolStripMenuItem mnuÖffnen;
@@ -381,10 +414,14 @@
         private System.Windows.Forms.TableLayoutPanel tlpDetails;
         private System.Windows.Forms.SaveFileDialog sfdDatei;
         private System.Windows.Forms.OpenFileDialog ofdDatei;
-        private Zeitanzeige zazSkala;
         private System.Windows.Forms.Timer tmrWiedergabe;
         private System.Windows.Forms.Label lblLinien;
         private System.Windows.Forms.ListBox lstLinien;
+        private Zeichenfläche zflInhalt;
+        private Zeitanzeige zazSkala;
+        private System.Windows.Forms.ToolStripButton tsbBewegen;
+        private System.Windows.Forms.ToolStripSeparator tssWiedergabe;
+        private System.Windows.Forms.ToolStripButton tsbUrsprungFestlegen;
     }
 }
 

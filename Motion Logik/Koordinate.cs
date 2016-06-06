@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Motion_Teach_In
+namespace Motion_Model
 {
     public class Koordinate
     {

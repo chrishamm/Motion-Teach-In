@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using Motion_Model;
+using Motion_View;
 
 namespace Motion_Teach_In
 {
@@ -17,9 +19,9 @@ namespace Motion_Teach_In
         }
 
         #region Modusauswahl
-        private void mnuBeenden_Click(object sender, EventArgs e)
+        private void tsbBewegen_Click(object sender, EventArgs e)
         {
-            Close();
+            zflInhalt.ControlModus = Zeichenfläche.Modus.Bewegemodus;
         }
 
         private void tsbZeichnenmodus_Click(object sender, EventArgs e)
@@ -118,15 +120,16 @@ namespace Motion_Teach_In
         #region Ereignisbehandlung der Zeichenfläche
         private void zflInhalt_ModusGeaendert(object sender, Zeichenfläche.Modus alterModus, Zeichenfläche.Modus neuerModus)
         {
+            tsbBewegen.Checked = (neuerModus == Zeichenfläche.Modus.Bewegemodus);
             tsbZeichnenmodus.Checked = (neuerModus == Zeichenfläche.Modus.Zeichenmodus);
             tsbLoeschmodus.Checked = (neuerModus == Zeichenfläche.Modus.Loeschmodus);
-            tsbWiedergabe.Checked = zazSkala.Visible = (neuerModus == Zeichenfläche.Modus.Wiedergabemodus);
+            tsbWiedergabeStarten.Checked = zazSkala.Visible = (neuerModus == Zeichenfläche.Modus.Wiedergabemodus);
         }
 
         private void zflInhalt_WiedergabeGestartet(object sender, EventArgs e)
         {
-            tsbWiedergabe.Enabled = false;
-            tsbStop.Enabled = true;
+            tsbWiedergabeStarten.Enabled = false;
+            tsbWiedergabeStoppen.Enabled = true;
 
             zazSkala.MaxZeit = zflInhalt.Datei.ZeitGesamt;
             tmrWiedergabe.Start();
@@ -134,8 +137,8 @@ namespace Motion_Teach_In
 
         private void zflInhalt_WiedergabeGestoppt(object sender, EventArgs e)
         {
-            tsbWiedergabe.Enabled = true;
-            tsbStop.Enabled = false;
+            tsbWiedergabeStarten.Enabled = true;
+            tsbWiedergabeStoppen.Enabled = false;
 
             zazSkala.Zeitwert = zflInhalt.WiedergabeZeit;
             tmrWiedergabe.Stop();
@@ -210,5 +213,10 @@ namespace Motion_Teach_In
             zflInhalt.WiedergabeZeit = zazSkala.Zeitwert;
         }
         #endregion
+
+        private void mnuBeenden_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

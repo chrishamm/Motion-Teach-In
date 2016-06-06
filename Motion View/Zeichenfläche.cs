@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Drawing;
+using System.ComponentModel;
 using System.IO;
-using System.Threading;
+using Motion_Model;
 
-
-namespace Motion_Teach_In
+namespace Motion_View
 {
     public partial class Zeichenfläche : UserControl
     {
@@ -16,7 +14,7 @@ namespace Motion_Teach_In
         private static readonly int PunktDurchmesser = 5;   // Durchmesser für gezeichnete Punkte
 
         private static readonly int Loeschhoehe = 15;        // Breite des zu löschenden Rechtecks im Löschmodus
-        private static readonly int Loeschbreite = 16;       // Höhe des zu löschenden Rechtecks im Löschmodus
+        private static readonly int Loeschbreite = 15;       // Höhe des zu löschenden Rechtecks im Löschmodus
         #endregion
 
         public Zeichenfläche()
@@ -36,12 +34,13 @@ namespace Motion_Teach_In
         #region Zustand des Controls
         public enum Modus
         {
+            Bewegemodus,        // Der gesamte Sketch kann bewegt werden
             Zeichenmodus,       // Neue Bewegungen können aufgezeichnet werden
             Loeschmodus,        // Bereits eingegebene Bewegungen können per Radiergummi gelöscht werden
             Wiedergabemodus     // Bereits eingegebene Bewegungen werden abgespielt
         }
 
-        private Modus aktuellerModus;
+        private Modus aktuellerModus = Modus.Zeichenmodus;
         public Modus ControlModus
         {
             get
@@ -61,6 +60,7 @@ namespace Motion_Teach_In
                 // Control vor dem Setzen des neuen Modus prüfen und ggf. zurücksetzen
                 switch (ControlModus)
                 {
+                    case Modus.Bewegemodus:
                     case Modus.Loeschmodus:
                         Cursor = Cursors.Default;
                         break;
@@ -76,8 +76,12 @@ namespace Motion_Teach_In
                 // Erst dann neuen Modus anwenden
                 switch (value)
                 {
+                    case Modus.Bewegemodus:
+                        Cursor = Cursors.SizeAll;
+                        break;
+
                     case Modus.Loeschmodus:
-                        Cursor = new Cursor(GetType(), "Resources.gummi.cur");
+                        Cursor = new Cursor(new MemoryStream(Motion_View.Properties.Resources.gummi));
                         break;
 
                     case Modus.Wiedergabemodus:
@@ -99,6 +103,8 @@ namespace Motion_Teach_In
 
         #region Bindung an die Dateikomponente
         private Datei datei;
+
+        [Browsable(false)]
         public Datei Datei
         {
             get
@@ -239,7 +245,6 @@ namespace Motion_Teach_In
 
                 WiedergabeGestartet?.Invoke(this, new EventArgs());
             }
-            
         }
 
         // Stoppt die Wiedergabe der eingegebenen Bewegungen
@@ -258,6 +263,7 @@ namespace Motion_Teach_In
         }
 
         // Liefert die Zeit in ms seit dem Wiedergabebeginn zurück und setzt diese bei Bedarf
+        [Browsable(false)]
         public int WiedergabeZeit
         {
             get
@@ -353,6 +359,7 @@ namespace Motion_Teach_In
 
         // Eigenschaft zum Setzen von markierten Linien
         private Linie markierteLinie;
+        [Browsable(false)]
         public Linie MarkierteLinie
         {
             get { return markierteLinie; }
