@@ -308,7 +308,9 @@ namespace Motion_Teach_In
             // lstLinien
             // 
             this.lstLinien.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstLinien.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstLinien.FormattingEnabled = true;
+            this.lstLinien.ItemHeight = 20;
             this.lstLinien.Location = new System.Drawing.Point(3, 16);
             this.lstLinien.Name = "lstLinien";
             this.lstLinien.Size = new System.Drawing.Size(214, 454);
@@ -328,6 +330,7 @@ namespace Motion_Teach_In
             this.zflInhalt.Name = "zflInhalt";
             this.zflInhalt.Size = new System.Drawing.Size(846, 392);
             this.zflInhalt.TabIndex = 0;
+       
             this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
             this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
             this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
@@ -369,6 +372,7 @@ namespace Motion_Teach_In
             this.Controls.Add(this.spcInhalt);
             this.Controls.Add(this.tsToolbar);
             this.Controls.Add(this.mnuMenu);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuMenu;
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "frmMain";
