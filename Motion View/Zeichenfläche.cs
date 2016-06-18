@@ -26,7 +26,6 @@ namespace Motion_View
         {
             DoubleBuffered = true;
 
-            datei = new Datei();            // datei darf nie null werden
             datei.CollectionChanged += Datei_CollectionChanged;
             stoppuhr = new Stopwatch();     // Zum Messen der zeitlichen Dimension beim Zeichnen
         }
@@ -37,7 +36,8 @@ namespace Motion_View
             Bewegemodus,        // Der gesamte Sketch kann bewegt werden
             Zeichenmodus,       // Neue Bewegungen können aufgezeichnet werden
             Loeschmodus,        // Bereits eingegebene Bewegungen können per Radiergummi gelöscht werden
-            Wiedergabemodus     // Bereits eingegebene Bewegungen werden abgespielt
+            Wiedergabemodus,     // Bereits eingegebene Bewegungen werden abgespielt
+            Ursprungsmodus      // Ursprung kann per Klick definiert werden
         }
 
         private Modus aktuellerModus = Modus.Zeichenmodus;
@@ -95,16 +95,23 @@ namespace Motion_View
                 ModusGeaendert?.Invoke(this, alterModus, value);
             }
         }
-        private bool modusAktiv;     // Ist der gewählte Modus gerade aktiv?
+        private bool modusAktiv;                                // Ist der gewählte Modus gerade aktiv?
+
+        private Point zeichnungOffset = new Point(0, 0);        // Alle Koordinaten werden um dieses Offset verschoben gezeichnet bzw. aufgenommen
+
+        private Point bewegenStartOffset;                       // Enthält das Zeichnungsoffset, welches beim Mausklick gesetzt war
+        private Point bewegenStartKoordinate;                   // Enthält die Koordinaten des Mausklicks während die Zeichnung bewegt wird
+
+        private Point ursprungKoordinate;
 
         public delegate void ModusGeaendertEvent(object sender, Modus alterModus, Modus neuerModus);
         public event ModusGeaendertEvent ModusGeaendert;
         #endregion
 
         #region Bindung an die Dateikomponente
-        private Datei datei;
+        private Datei datei = new Datei();                      // Darf nie null werden
 
-        [Browsable(false)]
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public Datei Datei
         {
             get
@@ -127,7 +134,8 @@ namespace Motion_View
 
                 Datei alteDatei = datei;
                 datei = value;
-                Refresh();
+                zeichnungOffset.X = zeichnungOffset.Y = 0;
+                Invalidate();
 
                 alteDatei.CollectionChanged -= Datei_CollectionChanged;
                 datei.CollectionChanged += Datei_CollectionChanged;
@@ -153,7 +161,13 @@ namespace Motion_View
         // Event wird ausgelöst wenn die Maus gedrückt wird (quasi initial-zündung)
         private void Zeichenfläche_MouseDown(object sender, MouseEventArgs e)
         {
-            if (ControlModus == Modus.Zeichenmodus)
+            if (ControlModus == Modus.Bewegemodus)
+            {
+                bewegenStartOffset = zeichnungOffset;
+                bewegenStartKoordinate = e.Location;
+                modusAktiv = true;
+            }
+            else if (ControlModus == Modus.Zeichenmodus)
             {
                 // Neue Linie anlegen
                 zeichnendeLinie = new Linie();
@@ -166,7 +180,7 @@ namespace Motion_View
                 // Ersten Punkt an dieser Koordinate anlegen
                 Zeichenfläche_MouseMove(this, e);
             }
-            else if (ControlModus == Modus.Loeschmodus)
+            else if (ControlModus == Modus.Loeschmodus || ControlModus == Modus.Ursprungsmodus)
             {
                 modusAktiv = true;
             }
@@ -177,6 +191,15 @@ namespace Motion_View
         {
             if (modusAktiv)
             {
+                if (ControlModus == Modus.Ursprungsmodus)
+                {
+                    datei.Ursprung.X = ursprungKoordinate.X - zeichnungOffset.X;
+                    datei.Ursprung.Y = ursprungKoordinate.Y - zeichnungOffset.Y;
+
+                    ControlModus = Modus.Zeichenmodus;
+                    Invalidate();
+                }
+
                 stoppuhr.Reset();
                 zeichnendeLinie = null;
                 modusAktiv = false;
@@ -195,12 +218,22 @@ namespace Motion_View
             // In welchem Modus befindet sich das Control?
             switch (ControlModus)
             {
+                case Modus.Bewegemodus:
+                    // Neues Offset für Zeichnung setzen und Control neu zeichnen
+                    if (modusAktiv)
+                    {
+                        zeichnungOffset.X = bewegenStartOffset.X - bewegenStartKoordinate.X + e.Location.X;
+                        zeichnungOffset.Y = bewegenStartOffset.Y - bewegenStartKoordinate.Y + e.Location.Y;
+                        Invalidate();
+                    }
+                    break;
+                
                 case Modus.Zeichenmodus:
                     // Ist die letzte Koordinate ungleich der aktuelle Koordinate?
                     if (zeichnendeLinie.LetzteKoordinate != e.Location)
                     {
                         // Nein - neue Koordinate erzeugen und aufnehmen
-                        zeichnendeLinie.Add(new Koordinate(e.X, e.Y, (int)stoppuhr.ElapsedMilliseconds));
+                        zeichnendeLinie.Add(new Koordinate(e.X - zeichnungOffset.X, e.Y - zeichnungOffset.Y, (int)stoppuhr.ElapsedMilliseconds));
                         stoppuhr.Restart();
 
                         // Neuen Block zeichnen
@@ -210,11 +243,16 @@ namespace Motion_View
 
                 case Modus.Loeschmodus:
                     // Der Löschmodus soll alle Punkte im enthaltenen Rechteck löschen, was von der Dateiklasse erledigt wird
-                    if (datei.LoescheBei(e.X, e.Y, Loeschhoehe, Loeschbreite))
+                    if (datei.LoescheBei(e.X - zeichnungOffset.X, e.Y - zeichnungOffset.Y, Loeschhoehe, Loeschbreite))
                     {
                         // Aus Performancegründen wird das Control nur bei Änderungen des Inhalts neu gezeichnet
                         Invalidate();
                     }
+                    break;
+
+                case Modus.Ursprungsmodus:
+                    ursprungKoordinate = e.Location;
+                    Invalidate();
                     break;
             }
         }
@@ -263,7 +301,7 @@ namespace Motion_View
         }
 
         // Liefert die Zeit in ms seit dem Wiedergabebeginn zurück und setzt diese bei Bedarf
-        [Browsable(false)]
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public int WiedergabeZeit
         {
             get
@@ -327,7 +365,15 @@ namespace Motion_View
         #endregion
 
         #region Visualisierung des Controls
-        // Standarddarstellung der Punkte
+
+        private Pen ursprungPinsel = Pens.Aquamarine;
+
+        public Pen UrsprungPinsel
+        {
+            get { return ursprungPinsel; }
+            set { ursprungPinsel = value; }
+        }
+
         private Brush punktPinsel = Brushes.Black;
         public Brush PunktPinsel
         {
@@ -377,11 +423,22 @@ namespace Motion_View
             int akkumulierteZeit = 0;
             int numAktuelleLinie = 0;
 
+            // Ursprung einzeichnen
+            if (ControlModus == Modus.Ursprungsmodus)
+            {
+                e.Graphics.DrawLine(UrsprungPinsel, ursprungKoordinate.X, 0, ursprungKoordinate.X, Height);
+                e.Graphics.DrawLine(UrsprungPinsel, 0, ursprungKoordinate.Y, Width, ursprungKoordinate.Y);
+            }
+            else
+            {
+                e.Graphics.DrawLine(UrsprungPinsel, datei.Ursprung.X + zeichnungOffset.X, 0, datei.Ursprung.X + zeichnungOffset.X, Height);
+                e.Graphics.DrawLine(UrsprungPinsel, 0, datei.Ursprung.Y + zeichnungOffset.Y, Width, datei.Ursprung.Y + zeichnungOffset.Y);
+            }
+
             // Verbindungslinien zwischen den einzelnen Punkten zeichnen
-            Koordinate letzteKoordinate;
             foreach (Linie l in datei)
             {
-                letzteKoordinate = null;
+                Koordinate letzteKoordinate = null;
                 foreach (Koordinate k in l)
                 {
                     // Kann diese Verbindungslinie im Wiedergabemodus gezeichnet werden?
@@ -400,10 +457,16 @@ namespace Motion_View
                         }
                     }
 
-                    // Verbindungen zwischen Punkten mit grauer Linie zeichnen
                     if (letzteKoordinate != null)
                     {
-                        e.Graphics.DrawLine((l == markierteLinie) ? markierterLinienPinsel : linienPinsel, letzteKoordinate.X, letzteKoordinate.Y, k.X, k.Y);
+                        // Offset anwenden
+                        int x = k.X + zeichnungOffset.X;
+                        int y = k.Y + zeichnungOffset.Y;
+                        int letztesX = letzteKoordinate.X + zeichnungOffset.X;
+                        int letztesY = letzteKoordinate.Y + zeichnungOffset.Y;
+
+                        // Verbindungen zwischen Punkten mit grauer Linie zeichnen
+                        e.Graphics.DrawLine((l == markierteLinie) ? markierterLinienPinsel : linienPinsel, letztesX, letztesY, x, y);
                     }
                     letzteKoordinate = k;
                 }
@@ -446,9 +509,13 @@ namespace Motion_View
                         }
                     }
 
+                    // Offset anwenden
+                    int x = k.X + zeichnungOffset.X;
+                    int y = k.Y + zeichnungOffset.Y;
+
                     // Punkte als Kreise zeichnen
                     e.Graphics.FillEllipse((l == markierteLinie) ? markierterPunktPinsel : punktPinsel,
-                        k.X - PunktDurchmesser / 2, k.Y - PunktDurchmesser / 2, PunktDurchmesser, PunktDurchmesser);
+                        x - PunktDurchmesser / 2, y - PunktDurchmesser / 2, PunktDurchmesser, PunktDurchmesser);
                 }
 
                 if (ControlModus == Modus.Wiedergabemodus)

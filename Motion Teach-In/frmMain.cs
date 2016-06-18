@@ -33,6 +33,10 @@ namespace Motion_Teach_In
         {
             zflInhalt.ControlModus = Zeichenfläche.Modus.Loeschmodus;
         }
+        private void tsbUrsprungFestlegen_Click(object sender, EventArgs e)
+        {
+            zflInhalt.ControlModus = Zeichenfläche.Modus.Ursprungsmodus;
+        }
 
         private void tsbWiedergabe_Click(object sender, EventArgs e)
         {
@@ -124,6 +128,7 @@ namespace Motion_Teach_In
             tsbZeichnenmodus.Checked = (neuerModus == Zeichenfläche.Modus.Zeichenmodus);
             tsbLoeschmodus.Checked = (neuerModus == Zeichenfläche.Modus.Loeschmodus);
             tsbWiedergabeStarten.Checked = zazSkala.Visible = (neuerModus == Zeichenfläche.Modus.Wiedergabemodus);
+            tsbUrsprungFestlegen.Checked = (neuerModus == Zeichenfläche.Modus.Ursprungsmodus);
         }
 
         private void zflInhalt_WiedergabeGestartet(object sender, EventArgs e)
@@ -131,7 +136,7 @@ namespace Motion_Teach_In
             tsbWiedergabeStarten.Enabled = false;
             tsbWiedergabeStoppen.Enabled = true;
 
-            zazSkala.MaxZeit = zflInhalt.Datei.ZeitGesamt;
+            zazSkala.MaxZeit = zflInhalt.Datei.ErmittleGesamtzeit();
             tmrWiedergabe.Start();
         }
 
@@ -155,8 +160,8 @@ namespace Motion_Teach_In
             // Listener für Linienänderungen einbauen
             neueDatei.CollectionChanged += Datei_CollectionChanged;
 
-              zazSkala.MaxZeit = neueDatei.ZeitGesamt;
-            zazSkala.Zeitwert = neueDatei.ZeitGesamt;
+            // Zeitskala anpassen
+            zazSkala.MaxZeit = zazSkala.Zeitwert = neueDatei.ErmittleGesamtzeit();
 
             // Listbox der Linien neu füllen
             LinienAktualisieren();

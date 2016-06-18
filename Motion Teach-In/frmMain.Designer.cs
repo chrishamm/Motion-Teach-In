@@ -195,7 +195,6 @@ namespace Motion_Teach_In
             // 
             // tsbBewegen
             // 
-            this.tsbBewegen.Enabled = false;
             this.tsbBewegen.Image = ((System.Drawing.Image)(resources.GetObject("tsbBewegen.Image")));
             this.tsbBewegen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbBewegen.Name = "tsbBewegen";
@@ -255,12 +254,12 @@ namespace Motion_Teach_In
             // 
             // tsbUrsprungFestlegen
             // 
-            this.tsbUrsprungFestlegen.Enabled = false;
             this.tsbUrsprungFestlegen.Image = ((System.Drawing.Image)(resources.GetObject("tsbUrsprungFestlegen.Image")));
             this.tsbUrsprungFestlegen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbUrsprungFestlegen.Name = "tsbUrsprungFestlegen";
             this.tsbUrsprungFestlegen.Size = new System.Drawing.Size(135, 28);
             this.tsbUrsprungFestlegen.Text = "Ursprung festlegen";
+            this.tsbUrsprungFestlegen.Click += new System.EventHandler(this.tsbUrsprungFestlegen_Click);
             // 
             // spcInhalt
             // 
@@ -330,7 +329,7 @@ namespace Motion_Teach_In
             this.zflInhalt.Name = "zflInhalt";
             this.zflInhalt.Size = new System.Drawing.Size(846, 392);
             this.zflInhalt.TabIndex = 0;
-       
+            this.zflInhalt.WiedergabeZeit = 0;
             this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
             this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
             this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);

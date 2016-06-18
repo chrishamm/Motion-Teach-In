@@ -43,12 +43,12 @@ namespace Motion_Model
             dateiname = filename;
 
             // Tabelle "Koordinaten" auslesen
-            SQLiteCommand selectCmd = new SQLiteCommand(sqliteConnection);
-            selectCmd.CommandText = "SELECT * FROM Koordinaten;";
+            SQLiteCommand selectKoordinatenCmd = new SQLiteCommand(sqliteConnection);
+            selectKoordinatenCmd.CommandText = "SELECT * FROM Koordinaten;";
 
             Linie linie = null;
             int indexLinie = 0;
-            SQLiteDataReader reader = selectCmd.ExecuteReader();
+            SQLiteDataReader reader = selectKoordinatenCmd.ExecuteReader();
             while (reader.Read())
             {
                 int neuerIndexLinie = reader.GetInt32(0);
@@ -63,6 +63,25 @@ namespace Motion_Model
                 int y = reader.GetInt32(2);
                 int zeit = reader.GetInt32(3);
                 linie.Add(new Koordinate(x, y, zeit));
+            }
+
+            // Tabelle "Einstellungen" auslesen
+            SQLiteCommand selectEinstellungenCommand = new SQLiteCommand(sqliteConnection);
+            selectEinstellungenCommand.CommandText = "SELECT * FROM Einstellungen;";
+            reader = selectEinstellungenCommand.ExecuteReader();
+            while (reader.Read())
+            {
+                string name = reader.GetString(0);
+                string wert = reader.GetString(1);
+
+                if (name == "ursprung_x")
+                {
+                    Ursprung.X = int.Parse(wert);
+                }
+                else if (name == "ursprung_y")
+                {
+                    Ursprung.Y = int.Parse(wert);
+                }
             }
 
             // Fertig
@@ -85,14 +104,18 @@ namespace Motion_Model
                 SQLiteCommand createCmd = new SQLiteCommand(sqliteConnection);
                 createCmd.CommandText = "CREATE TABLE IF NOT EXISTS Koordinaten (linie INTEGER NOT NULL, x INTEGER NOT NULL, y INTEGER NOT NULL, ZeitAbsolut INTEGER NOT NULL);";
                 createCmd.ExecuteNonQuery();
+                createCmd.CommandText = "CREATE TABLE IF NOT EXISTS Einstellungen (name TEXT, wert TEXT);";
+                createCmd.ExecuteNonQuery();
             }
 
             // Tabelle leeren
             SQLiteCommand deleteCmd = new SQLiteCommand(sqliteConnection);
             deleteCmd.CommandText = "DELETE FROM Koordinaten;";
             deleteCmd.ExecuteNonQuery();
+            deleteCmd.CommandText = "DELETE FROM Einstellungen;";
+            deleteCmd.ExecuteNonQuery();
 
-            // Tabelle füllen und dabei Transaktion nutzen, um höhere Performance zu erreichen
+            // Erste Tabelle mit Koordinaten füllen und dabei Transaktion nutzen, um höhere Performance zu erreichen
             SQLiteCommand insertCmd = new SQLiteCommand(sqliteConnection);
             SQLiteTransaction transaction = sqliteConnection.BeginTransaction();
             for(int indexLinie = 0; indexLinie < Count; indexLinie++)
@@ -106,6 +129,15 @@ namespace Motion_Model
                 }
             }
             transaction.Commit();
+
+            // Weitere Einstellungen speichern
+            SQLiteCommand settingsCommand = new SQLiteCommand(sqliteConnection);
+            settingsCommand.CommandText = string.Format("INSERT INTO Einstellungen (name, wert) VALUES (\"ursprung_x\", \"{0}\");", Ursprung.X);
+            settingsCommand.ExecuteNonQuery();
+            settingsCommand.CommandText = string.Format("INSERT INTO Einstellungen (name, wert) VALUES (\"ursprung_y\", \"{0}\");", Ursprung.Y);
+            settingsCommand.ExecuteNonQuery();
+
+            // Fertig
             veraendert = false;
         }
 
@@ -146,21 +178,26 @@ namespace Motion_Model
         }
         #endregion
 
-        // Liefert die gesamte Zeichendauer der einzelnen Koordinaten zurück
-        public int ZeitGesamt
+        private Koordinate ursprung = new Koordinate(0, 0, 0);
+
+        public Koordinate Ursprung
         {
-            get
+            get { return ursprung; }
+            set { ursprung = value; }
+        }
+
+        // Liefert die gesamte Zeichendauer der einzelnen Koordinaten zurück
+        public int ErmittleGesamtzeit()
+        {
+            int zeit = 0;
+            foreach (Linie l in this)
             {
-                int zeit = 0;
-                foreach (Linie l in this)
+                foreach (Koordinate koord in l)
                 {
-                    foreach (Koordinate koord in l)
-                    {
-                        zeit += koord.Zeit;
-                    }
+                    zeit += koord.Zeit;
                 }
-                return zeit;
             }
+            return zeit;
         }
 
         // Lösche alle Punkte im Rechteck lb x lh um den Punkt x, y
@@ -184,6 +221,22 @@ namespace Motion_Model
                     {
                         if (koord.Y >= min_y && koord.Y <= max_y)
                         {
+                            // Soll ein Punkt innerhalb einer Linie gelöscht werden, dann soll die Linie in zwei Teile aufgeteilt werden
+                            if (k != 0 && k != this[i].Count - 1)
+                            {
+                                // Es soll in einer Linie gelöscht werden. Diese einfach aufteilen
+                                Linie linie = new Linie();
+                                for (int l = this[i].Count - 1; l > k; l--)
+                                {
+                                    linie.Add(this[i][l]);
+                                    this[i].RemoveAt(l);
+                                }
+
+                                // Neue Linie hinter dieser einfügen
+                                this.Insert(i + 1, linie);
+                                break;
+                            }
+
                             // Punkt befindet sich inenrhalb des angegebenen Rechtecks, also löschen
                             this[i].RemoveAt(k);
                             punkteGeloescht = true;
