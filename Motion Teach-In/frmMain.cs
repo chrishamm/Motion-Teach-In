@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using Motion_Model;
 using Motion_View;
+using Motion_Robot;
+
 
 namespace Motion_Teach_In
 {
@@ -222,6 +224,20 @@ namespace Motion_Teach_In
         private void mnuBeenden_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void robottest_Click(object sender, EventArgs e)
+        {
+            Form roboterfenster = new Robotform(zflInhalt.Datei);
+            roboterfenster.Show();
+
+            if (zflInhalt.Datei != null)
+            {
+                
+            }
+            
+            
+            
         }
     }
 }

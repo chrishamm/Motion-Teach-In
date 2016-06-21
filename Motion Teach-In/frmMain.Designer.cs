@@ -62,6 +62,7 @@ namespace Motion_Teach_In
             this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
             this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
             this.tmrWiedergabe = new System.Windows.Forms.Timer(this.components);
+            this.robottest = new System.Windows.Forms.Button();
             this.mnuMenu.SuspendLayout();
             this.tsToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spcInhalt)).BeginInit();
@@ -363,11 +364,22 @@ namespace Motion_Teach_In
             this.tmrWiedergabe.Interval = 250;
             this.tmrWiedergabe.Tick += new System.EventHandler(this.tmrWiedergabe_Tick);
             // 
+            // robottest
+            // 
+            this.robottest.Location = new System.Drawing.Point(720, 24);
+            this.robottest.Name = "robottest";
+            this.robottest.Size = new System.Drawing.Size(133, 23);
+            this.robottest.TabIndex = 5;
+            this.robottest.Text = "nur zum testen";
+            this.robottest.UseVisualStyleBackColor = true;
+            this.robottest.Click += new System.EventHandler(this.robottest_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1070, 528);
+            this.Controls.Add(this.robottest);
             this.Controls.Add(this.spcInhalt);
             this.Controls.Add(this.tsToolbar);
             this.Controls.Add(this.mnuMenu);
@@ -425,6 +437,7 @@ namespace Motion_Teach_In
         private System.Windows.Forms.ToolStripButton tsbBewegen;
         private System.Windows.Forms.ToolStripSeparator tssWiedergabe;
         private System.Windows.Forms.ToolStripButton tsbUrsprungFestlegen;
+        private System.Windows.Forms.Button robottest;
     }
 }
 
