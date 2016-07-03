@@ -42,7 +42,7 @@
             // btnxplus
             // 
             this.btnxplus.Location = new System.Drawing.Point(31, 34);
-            this.btnxplus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnxplus.Margin = new System.Windows.Forms.Padding(4);
             this.btnxplus.Name = "btnxplus";
             this.btnxplus.Size = new System.Drawing.Size(67, 62);
             this.btnxplus.TabIndex = 0;
@@ -54,7 +54,7 @@
             // btnxminus
             // 
             this.btnxminus.Location = new System.Drawing.Point(31, 126);
-            this.btnxminus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnxminus.Margin = new System.Windows.Forms.Padding(4);
             this.btnxminus.Name = "btnxminus";
             this.btnxminus.Size = new System.Drawing.Size(67, 62);
             this.btnxminus.TabIndex = 1;
@@ -66,7 +66,7 @@
             // btnyplus
             // 
             this.btnyplus.Location = new System.Drawing.Point(145, 34);
-            this.btnyplus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnyplus.Margin = new System.Windows.Forms.Padding(4);
             this.btnyplus.Name = "btnyplus";
             this.btnyplus.Size = new System.Drawing.Size(67, 62);
             this.btnyplus.TabIndex = 2;
@@ -78,7 +78,7 @@
             // btnyminus
             // 
             this.btnyminus.Location = new System.Drawing.Point(145, 126);
-            this.btnyminus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnyminus.Margin = new System.Windows.Forms.Padding(4);
             this.btnyminus.Name = "btnyminus";
             this.btnyminus.Size = new System.Drawing.Size(67, 62);
             this.btnyminus.TabIndex = 3;
@@ -90,7 +90,7 @@
             // btnzplus
             // 
             this.btnzplus.Location = new System.Drawing.Point(264, 34);
-            this.btnzplus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnzplus.Margin = new System.Windows.Forms.Padding(4);
             this.btnzplus.Name = "btnzplus";
             this.btnzplus.Size = new System.Drawing.Size(67, 62);
             this.btnzplus.TabIndex = 4;
@@ -102,7 +102,7 @@
             // btnzminus
             // 
             this.btnzminus.Location = new System.Drawing.Point(264, 126);
-            this.btnzminus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnzminus.Margin = new System.Windows.Forms.Padding(4);
             this.btnzminus.Name = "btnzminus";
             this.btnzminus.Size = new System.Drawing.Size(67, 62);
             this.btnzminus.TabIndex = 5;
@@ -118,17 +118,18 @@
             this.erklärungpositionierung.Location = new System.Drawing.Point(339, 34);
             this.erklärungpositionierung.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.erklärungpositionierung.Name = "erklärungpositionierung";
-            this.erklärungpositionierung.Size = new System.Drawing.Size(307, 48);
+            this.erklärungpositionierung.Size = new System.Drawing.Size(291, 80);
             this.erklärungpositionierung.TabIndex = 6;
-            this.erklärungpositionierung.Text = "Bitte fuehren Sie den Roboterarm ueber die\r\n 6 Positionstasten auf die Nullpositi" +
-    "on\r\n (Markierung an dem Roboterfuss)";
+            this.erklärungpositionierung.Text = "Bitte fuehren Sie den Roboterarm\r\n ueber die  6 Positionstasten\r\n auf die Nullpos" +
+    "ition\r\n(Markierung an dem Roboterfuss)";
             // 
             // btndobotbewegung
             // 
-            this.btndobotbewegung.Location = new System.Drawing.Point(31, 295);
-            this.btndobotbewegung.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btndobotbewegung.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btndobotbewegung.Location = new System.Drawing.Point(31, 280);
+            this.btndobotbewegung.Margin = new System.Windows.Forms.Padding(4);
             this.btndobotbewegung.Name = "btndobotbewegung";
-            this.btndobotbewegung.Size = new System.Drawing.Size(285, 69);
+            this.btndobotbewegung.Size = new System.Drawing.Size(300, 128);
             this.btndobotbewegung.TabIndex = 7;
             this.btndobotbewegung.Text = "Sende Bewegung an Dobot";
             this.btndobotbewegung.UseVisualStyleBackColor = true;
@@ -136,19 +137,20 @@
             // 
             // btn_notaus
             // 
-            this.btn_notaus.Location = new System.Drawing.Point(653, 13);
+            this.btn_notaus.BackColor = System.Drawing.Color.Red;
+            this.btn_notaus.Location = new System.Drawing.Point(670, 11);
             this.btn_notaus.Name = "btn_notaus";
             this.btn_notaus.Size = new System.Drawing.Size(92, 69);
             this.btn_notaus.TabIndex = 8;
             this.btn_notaus.Text = "NOT-AUS";
-            this.btn_notaus.UseVisualStyleBackColor = true;
+            this.btn_notaus.UseVisualStyleBackColor = false;
             this.btn_notaus.Click += new System.EventHandler(this.btn_notaus_Click);
             // 
             // Robotform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 527);
+            this.ClientSize = new System.Drawing.Size(774, 527);
             this.Controls.Add(this.btn_notaus);
             this.Controls.Add(this.btndobotbewegung);
             this.Controls.Add(this.erklärungpositionierung);
@@ -158,9 +160,9 @@
             this.Controls.Add(this.btnyplus);
             this.Controls.Add(this.btnxminus);
             this.Controls.Add(this.btnxplus);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Robotform";
-            this.Text = "Form1";
+            this.Text = "Robotersteuerung";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Robotform_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

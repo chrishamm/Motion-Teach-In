@@ -19,67 +19,71 @@ namespace Motion_Robot
     public partial class Robotform : Form
     {
 
-        private byte isJoint = (byte)0;
+        //Objekte zum Speichern der Position und der comands
         private bool isConnectted = false;
         private JogInstantCmd currentCmd;
         private PlaybackBufferCmd pdbCmd = new PlaybackBufferCmd();
         private Pose pose = new Pose();
+
+        //Globale Variablen/Objekte die von der Hauptform an die Roboterform übergeben werden
         private Datei Arbeitskopie;
         private int zfl_höhe;
         private int zfl_breite;
-        private double robot_höhe = 100;  //150mm
-        private double robot_breite = 100; //150mm
-        private double faktor_pixel_zu_mm = 0.264583;
 
-
-
-
-
-
-
+        private double robot_höhe = 100;  //100mm
+        private double robot_breite = 100; //100mm
+        private double faktor_pixel_zu_mm = 0.264583; //ein mm entspricht 0.2645 pixel
 
         public Robotform(Datei übergebene_arbeitskopie, int höhe_orig_fläche, int breite_orig_fläche)
         {
             InitializeComponent();
-            
 
-            
+            //Parameter und Objekte, die von der Hauptform an die Roboterform gegeben werden
             Arbeitskopie = übergebene_arbeitskopie;
-            zfl_höhe = (int)((double)höhe_orig_fläche*faktor_pixel_zu_mm);
-            zfl_breite =(int)((double) breite_orig_fläche*faktor_pixel_zu_mm);
+            // Höhe und Breite der Zeichenfläche wird von Pixel auf mm umgerechnet
+            zfl_höhe = (int)((double)höhe_orig_fläche * faktor_pixel_zu_mm);
+            zfl_breite = (int)((double)breite_orig_fläche * faktor_pixel_zu_mm);
+
+            //Startet Verbindung zum Roboter
             StartDobot();
+            //startet die Timer
             StartPeriodic();
 
         }
         #region eigene_funktionen
         private void StartDobot()
         {
-
-            //DobotDll.ResetDobot();
+            //ret ist eine normale Zahl, die einen Fehlercode repräsentiert
             int ret;
-            // start connect
-            
-            if ((ret = DobotDll.ConnectDobot()) >= (int)DobotResult.DobotResult_Error_Min)
+
+            //Überprüft ob eine Verbindung zum Roboter gefunden wurde.Wenn nicht, wird die Form sofort geschlossen und es erscheint eine Benachrichtigung
+            if ((ret = DobotDll.ConnectDobot()) >= (int) DobotResult.DobotResult_Error_Min)
             {
-                MessageBox.Show("kein roboter gefunden");
+                MessageBox.Show("Kein Roboter gefunden");
                 this.Close();
                 return;
             }
+
+            //Ist eine Verbindung vorhanden wird die Form aufgerufen und der Status isconnectted auf true gesetzt
+            else
+            {
+                this.Show();
+                isConnectted = true;
+            }
+            
             
 
-            isConnectted = true;
-            // reset and start
-
+            //Time-out für die comands
             DobotDll.SetCmdTimeout(500);
-            DobotDll.SetEndType(EndType.EndTypeLaser);
 
-            // Must set when sensor is not exist
+
+            //Gibt die Stellung in Winkelpositionen zwischen "Oberarm" und "Unterarm" an, die max. angefahren werden kann
             InitialPose initialPose;
             initialPose.joint2Angle = 45;
             initialPose.joint3Angle = 45;
             DobotDll.SetInitialPose(ref initialPose);
 
-
+            //Statische Paramter die Beschleunigung und Geschwidigkeit der Joints, der Servormotoren und des liniearen Abfahrens angeben, gilt für die Jogs (Anfahren über Winkelpositionen)
             JogStaticParams jsParam;
             jsParam.jointMaxVelocity = 15;
             jsParam.jointMaxAcceleration = 50;
@@ -89,10 +93,12 @@ namespace Motion_Robot
             jsParam.linearMaxAcceleration = 40;
             DobotDll.SetJogStaticParams(ref jsParam);
 
+            //Dynamischer Parameter, der die Beschleunigung angibt
             JogDynamicParams jdParam;
             jdParam.velocityRatio = 30;
             DobotDll.SetJogDynamicParams(ref jdParam);
 
+            //Statische Paramter die Beschleunigung und Geschwidigkeit der Joints, der Servormotoren und des liniearen Abfahrens angeben, gilt für die Playbackcomands (Anfahren über Koordinaten)
             PlaybackStaticParams pbsParam;
             pbsParam.jointMaxVelocity = 100;
             pbsParam.jointMaxAcceleration = 100;
@@ -104,53 +110,54 @@ namespace Motion_Robot
             pbsParam.jumpHeight = 20;
             DobotDll.SetPlaybackStaticParams(ref pbsParam);
 
+            //Dynamischer Parameter, der die Beschleunigung und die Geschwindigkeit angibt
             PlaybackDynamicParams pbdParam;
             pbdParam.velocityRatio = 30;
             pbdParam.accelerationRatio = 30;
             DobotDll.SetPlaybackDynamicParams(ref pbdParam);
 
+            //Funktion zum Umrechnen der aufgenommenen Koordinaten 
             Koordinaten_umrechnen();
 
         }
         private void StartPeriodic()
         {
-            // start peridic cmd
+            //Startet Comand-Timer, wird alle 100ms aufgerungen
             System.Windows.Forms.Timer cmdTimer = new System.Windows.Forms.Timer();
             cmdTimer.Interval = 100;
             cmdTimer.Tick += CmdTimer_Tick;
             cmdTimer.Start();
 
-            // start get pose peridic cmd
+            //Startet Positions-Timer, wird alle 100ms aufgerufen
             System.Windows.Forms.Timer posTimer = new System.Windows.Forms.Timer();
             posTimer.Interval = 100;
             posTimer.Tick += PosTimer_Tick;
             posTimer.Start();
         }
 
-        private void Koordinaten_umrechnen() //beachten: y und x werden vertauscht, da das roboterkoordinatensystem invertiert ist.
+        //Rechnet die Koordianten um, auf die passende Größe und von pixel auf mm
+        private void Koordinaten_umrechnen()
         {
-
+            //Errechnen der Faktoren für x und y, dazu teilen der Roboterzeichenfläche durch die Programmzeichenfläche
             double faktor_x = robot_höhe / zfl_breite;
             double faktor_y = robot_breite / zfl_höhe;
 
-
-
-
+            //Abarbeiten aller Linien
             foreach (Linie l in Arbeitskopie)
             {
+                //Abarbeiten alle Koordinaten in der aktuellen Linie
                 foreach (Koordinate k in l)
                 {
-                    
-                    k.X = Convert.ToInt32((double)k.X*faktor_pixel_zu_mm*faktor_x); 
-                    k.Y = Convert.ToInt32((double)k.Y * faktor_pixel_zu_mm*faktor_y);
+                    //Werte werden zuerst in mm umgewandelt (faktor_pixel_zu_mm) und anschließend mit den Faktoren auf die richtige Größe skaliert
+                    k.X = Convert.ToInt32((double)k.X * faktor_pixel_zu_mm * faktor_x);
+                    k.Y = Convert.ToInt32((double)k.Y * faktor_pixel_zu_mm * faktor_y);
                 }
             }
-            
+        }
 
-    }
-        
         #endregion
         #region timer-events
+        //Überprüft alle 100ms die aktuelle Position, wenn ein Roboter verbunden ist
         private void PosTimer_Tick(object sender, EventArgs e)
         {
             if (!isConnectted)
@@ -158,168 +165,139 @@ namespace Motion_Robot
             DobotDll.GetPose(ref pose);
         }
 
+        //Wird alle 100ms aufgerufen und startet die Bewegung
         private void CmdTimer_Tick(object sender, EventArgs e)
         {
-            
-            // called in 200ms
             DobotDll.PeriodicTask();
         }
         #endregion
-        #region button-events
 
-        private void btnxplus_MouseDown(object sender, MouseEventArgs e) //X+
+
+        #region events zum Ansteuern der Nullposition
+
+
+        //X+
+        private void btnxplus_MouseDown(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogAPPressed;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
-        private void btnxplus_MouseUp(object sender, MouseEventArgs e) //stillstand (wird bei allen buttons bei mouse-down aufgerunfen
+        //Stillstand (wird bei allen buttons bei mouse-down aufgerunfen)
+        private void btnxplus_MouseUp(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogIdle;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
-        private void btnxminus_MouseDown(object sender, MouseEventArgs e)// X-
+        //X-
+        private void btnxminus_MouseDown(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogANPressed;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
-        private void btnyplus_MouseDown(object sender, MouseEventArgs e)// Y+
+        //Y+
+        private void btnyplus_MouseDown(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogBPPressed;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
-        private void btnyminus_MouseDown(object sender, MouseEventArgs e)//Y-
+        //Y-
+        private void btnyminus_MouseDown(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogBNPressed;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
-        private void btnzplus_MouseDown(object sender, MouseEventArgs e)//Z+
+        //Z+
+        private void btnzplus_MouseDown(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogCPPressed;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
-        private void btnzminus_MouseDown(object sender, MouseEventArgs e)//Z-
+        //Z-
+        private void btnzminus_MouseDown(object sender, MouseEventArgs e)
         {
             currentCmd.cmd = JogCmd.JogCNPressed;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
         #endregion
+        #region Events zum Abfahren der Koordinaten und Formevents
 
         private void btndobotbewegung_Click(object sender, EventArgs e)
         {
-          
-            
-            float x_akt = pose.x;
-            float y_akt = pose.y;
-            float z_akt = pose.z;
-
-
-          
-
-
+            //speichern der Position, die zum  Anfahr-Zeitpunkt aktuelle ist 
+            float xAkt = pose.x;
+            float yAkt = pose.y;
+            float zAkt = pose.z;
 
 
 
             foreach (Linie l in Arbeitskopie)
             {
-               DobotDll.SetCmdTimeout(1000);
+                // anzahl der koordinaten innerhalb einer linie erfassen und aktuelle_position-count setzen
                 int liniencount = l.Count;
                 int akt_pos = 0;
+
+                //abarbeiten aller linien und der beinhaltenden koordinaten
                 foreach (Koordinate k in l)
                 {
-                   /* if (akt_pos == liniencount-1)
-                    {
-                        
-                        pdbCmd.playbackPoint.motionStyle = 2;
-                        pdbCmd.playbackPoint.x = x_akt + k.X;
-                        pdbCmd.playbackPoint.y = y_akt + k.Y;
-                       // pdbCmd.playbackPoint.z = z_akt;
-                        pdbCmd.playbackPoint.pauseTime = 0;
-                        
-                       
-
-
-                        DobotDll.SetPlaybackBufferCmd(ref pdbCmd);
-                        DobotDll.PeriodicTask();
-                        Thread.Sleep(500);
-
-
-                        //springt von letzter koordinate einer linie zu der ersten koord. der neuen linie
-
-
-
-
-                    }*/
+                    //ist die Koordinate ein Anfangspunkt einer linie, soll "gesprungen" werden (motionstyle = 0);
                     if (akt_pos == 0)
                     {
-                        
+                        //angeben der koordinaten ( x,y,z,) die sich aus dem ausgangspunkt und der tatsächlichen koordinate zusammensetzt, z = const
                         pdbCmd.playbackPoint.motionStyle = 0; //springt zum anfangspunkt
-
-                        pdbCmd.playbackPoint.x = x_akt + k.X;
-                       
-                        pdbCmd.playbackPoint.y = y_akt + k.Y;
-                       
-                        pdbCmd.playbackPoint.z = z_akt;
+                        pdbCmd.playbackPoint.x = xAkt + k.X;
+                        pdbCmd.playbackPoint.y = yAkt + k.Y;
+                        pdbCmd.playbackPoint.z = zAkt;
                         pdbCmd.playbackPoint.pauseTime = 0;
-                       
 
-
+                        //übergeben des comand-obj (pdbCmd) an der Playbackbuffer, wird beim aufrufen des comand-timers erst wirklich ausgelöst
                         DobotDll.SetPlaybackBufferCmd(ref pdbCmd);
-                        DobotDll.PeriodicTask();
+                        //0.5s warten, bis der roboter die bewegung ausgeführt hat, erst dann mit der schleifenabarbeitung fortsetzen
                         Thread.Sleep(500);
 
-
                         akt_pos++;
-                        
-
-
-
 
                     }
+
+                    //Ist die Koordinate kein Anfangspunkt soll normal und liniar verfahren werden (motionstyle = 2)
                     else
                     {
-                        
-                        pdbCmd.playbackPoint.motionStyle = 2; //normale lin. bewegung
-                        pdbCmd.playbackPoint.x = x_akt + k.X;
-                        pdbCmd.playbackPoint.y = y_akt + k.Y;
-                        pdbCmd.playbackPoint.z = z_akt;
-                        pdbCmd.playbackPoint.pauseTime = 0;
-                      
+                        //angeben der koordinaten ( x,y,z,) die sich aus dem ausgangspunkt und der tatsächlichen koordinate zusammensetzt, z = const
+                        pdbCmd.playbackPoint.motionStyle = 2;
+                        pdbCmd.playbackPoint.x = xAkt + k.X;
+                        pdbCmd.playbackPoint.y = yAkt + k.Y;
+                        pdbCmd.playbackPoint.z = zAkt;
 
+                        //übergeben des comand-obj (pdbCmd) an der Playbackbuffer, wird beim aufrufen des comand-timers erst wirklich ausgelöst
                         DobotDll.SetPlaybackBufferCmd(ref pdbCmd);
-                        DobotDll.PeriodicTask();
+                        //0.5s warten, bis der roboter die bewegung ausgeführt hat, erst dann mit der schleifenabarbeitung fortsetzen
                         Thread.Sleep(500);
-                        
 
                         akt_pos++;
-                       
-
-
-
                     }
-
-
-
                 }
-                
             }
+            //schließen der Form nach Abarbeiten aller Linien
             this.Close();
         }
 
+        //Notaus-Event, versetzt den roboter in den Ruhezustand
         private void btn_notaus_Click(object sender, EventArgs e)
         {
             currentCmd.cmd = JogCmd.JogIdle;
             DobotDll.SetJogInstantCmd(ref currentCmd);
         }
 
+        //Beim schließen der Form wird die Verbindung zum Roboter unterbrochen
         private void Robotform_FormClosing(object sender, FormClosingEventArgs e)
         {
             DobotDll.DisconnectDobot();
         }
+        #endregion
     }
 }

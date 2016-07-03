@@ -180,7 +180,7 @@ namespace Motion_Teach_In
             lstLinien.BeginUpdate();
             lstLinien.Items.Clear();
             int counter = 1;
-            foreach(Linie l in zflInhalt.Datei)
+            foreach (Linie l in zflInhalt.Datei)
             {
                 lstLinien.Items.Add(String.Format("Linie {0}", counter));
                 counter++;
@@ -224,25 +224,23 @@ namespace Motion_Teach_In
         private void mnuBeenden_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void robottest_Click(object sender, EventArgs e)
-        {
            
 
+        }
+
+
+        // erzeugt eine neue roboterform wenn eine Bewegung aktuell vorhanden ist, wenn nicht wird Benachrichtigung ausgegeben
+        private void btn_robotersteuerung_Click(object sender, EventArgs e)
+        {
             if (zflInhalt.Datei.Count != 0)
-            {
-                    Form roboterfenster = new Robotform(zflInhalt.Datei, zflInhalt.Height, zflInhalt.Width);
-                    roboterfenster.Show();
-              }
+            {   
+                Form roboterfenster = new Robotform(zflInhalt.Datei, zflInhalt.Height, zflInhalt.Width);
+            }
             else
             {
                 MessageBox.Show("Wähle zuerst eine Bewegung aus!");
                 return;
             }
-            
-            
-            
         }
     }
 }
