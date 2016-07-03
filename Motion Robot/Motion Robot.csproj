@@ -93,6 +93,10 @@
       <Project>{df63c529-fb36-4f6b-99ca-446f8965f7cb}</Project>
       <Name>Motion Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Motion View\Motion View.csproj">
+      <Project>{e4f4cb0c-716e-460a-b2b7-d04059785285}</Project>
+      <Name>Motion View</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

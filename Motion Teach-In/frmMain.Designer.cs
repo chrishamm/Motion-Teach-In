@@ -330,7 +330,7 @@ namespace Motion_Teach_In
             this.zflInhalt.Name = "zflInhalt";
             this.zflInhalt.Size = new System.Drawing.Size(846, 392);
             this.zflInhalt.TabIndex = 0;
-            this.zflInhalt.WiedergabeZeit = 0;
+            
             this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
             this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
             this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
@@ -366,7 +366,7 @@ namespace Motion_Teach_In
             // 
             // robottest
             // 
-            this.robottest.Location = new System.Drawing.Point(720, 24);
+            this.robottest.Location = new System.Drawing.Point(714, 26);
             this.robottest.Name = "robottest";
             this.robottest.Size = new System.Drawing.Size(133, 23);
             this.robottest.TabIndex = 5;

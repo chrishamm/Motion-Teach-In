@@ -228,12 +228,17 @@ namespace Motion_Teach_In
 
         private void robottest_Click(object sender, EventArgs e)
         {
-            Form roboterfenster = new Robotform(zflInhalt.Datei);
-            roboterfenster.Show();
+           
 
-            if (zflInhalt.Datei != null)
+            if (zflInhalt.Datei.Count != 0)
             {
-                
+                    Form roboterfenster = new Robotform(zflInhalt.Datei, zflInhalt.Height, zflInhalt.Width);
+                    roboterfenster.Show();
+              }
+            else
+            {
+                MessageBox.Show("Wähle zuerst eine Bewegung aus!");
+                return;
             }
             
             
