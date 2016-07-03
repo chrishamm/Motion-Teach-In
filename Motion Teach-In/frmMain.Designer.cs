@@ -58,11 +58,12 @@ namespace Motion_Teach_In
             this.tlpDetails = new System.Windows.Forms.TableLayoutPanel();
             this.lblLinien = new System.Windows.Forms.Label();
             this.lstLinien = new System.Windows.Forms.ListBox();
-            this.zflInhalt = new Motion_View.Zeichenfläche();
-            this.zazSkala = new Motion_View.Zeitanzeige();
             this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
             this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
             this.tmrWiedergabe = new System.Windows.Forms.Timer(this.components);
+            this.splitContainerzeichenflächeundskala = new System.Windows.Forms.SplitContainer();
+            this.zflInhalt = new Motion_View.Zeichenfläche();
+            this.zazSkala = new Motion_View.Zeitanzeige();
             this.mnuMenu.SuspendLayout();
             this.tsToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spcInhalt)).BeginInit();
@@ -70,6 +71,10 @@ namespace Motion_Teach_In
             this.spcInhalt.Panel2.SuspendLayout();
             this.spcInhalt.SuspendLayout();
             this.tlpDetails.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerzeichenflächeundskala)).BeginInit();
+            this.splitContainerzeichenflächeundskala.Panel1.SuspendLayout();
+            this.splitContainerzeichenflächeundskala.Panel2.SuspendLayout();
+            this.splitContainerzeichenflächeundskala.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMenu
@@ -82,7 +87,7 @@ namespace Motion_Teach_In
             this.mnuMenu.Location = new System.Drawing.Point(0, 0);
             this.mnuMenu.Name = "mnuMenu";
             this.mnuMenu.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.mnuMenu.Size = new System.Drawing.Size(1427, 28);
+            this.mnuMenu.Size = new System.Drawing.Size(1597, 28);
             this.mnuMenu.TabIndex = 2;
             this.mnuMenu.Text = "menuStrip1";
             // 
@@ -193,7 +198,7 @@ namespace Motion_Teach_In
             this.btn_robotersteuerung});
             this.tsToolbar.Location = new System.Drawing.Point(0, 28);
             this.tsToolbar.Name = "tsToolbar";
-            this.tsToolbar.Size = new System.Drawing.Size(1427, 31);
+            this.tsToolbar.Size = new System.Drawing.Size(1597, 31);
             this.tsToolbar.TabIndex = 3;
             this.tsToolbar.Text = "Toolbar";
             // 
@@ -287,11 +292,10 @@ namespace Motion_Teach_In
             // 
             // spcInhalt.Panel2
             // 
-            this.spcInhalt.Panel2.Controls.Add(this.zflInhalt);
-            this.spcInhalt.Panel2.Controls.Add(this.zazSkala);
+            this.spcInhalt.Panel2.Controls.Add(this.splitContainerzeichenflächeundskala);
             this.spcInhalt.Panel2.Margin = new System.Windows.Forms.Padding(0, 68, 0, 0);
-            this.spcInhalt.Size = new System.Drawing.Size(1427, 591);
-            this.spcInhalt.SplitterDistance = 293;
+            this.spcInhalt.Size = new System.Drawing.Size(1597, 659);
+            this.spcInhalt.SplitterDistance = 327;
             this.spcInhalt.SplitterWidth = 5;
             this.spcInhalt.TabIndex = 4;
             // 
@@ -308,7 +312,7 @@ namespace Motion_Teach_In
             this.tlpDetails.RowCount = 2;
             this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDetails.Size = new System.Drawing.Size(293, 591);
+            this.tlpDetails.Size = new System.Drawing.Size(327, 659);
             this.tlpDetails.TabIndex = 0;
             // 
             // lblLinien
@@ -330,45 +334,11 @@ namespace Motion_Teach_In
             this.lstLinien.Location = new System.Drawing.Point(4, 21);
             this.lstLinien.Margin = new System.Windows.Forms.Padding(4);
             this.lstLinien.Name = "lstLinien";
-            this.lstLinien.Size = new System.Drawing.Size(285, 566);
+            this.lstLinien.Size = new System.Drawing.Size(319, 634);
             this.lstLinien.TabIndex = 1;
             this.lstLinien.SelectedIndexChanged += new System.EventHandler(this.lstLinien_SelectedIndexChanged);
             this.lstLinien.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLinien_KeyDown);
             this.lstLinien.Leave += new System.EventHandler(this.lstLinien_Leave);
-            // 
-            // zflInhalt
-            // 
-            this.zflInhalt.BackColor = System.Drawing.Color.Green;
-            this.zflInhalt.ControlModus = Motion_View.Zeichenfläche.Modus.Zeichenmodus;
-            this.zflInhalt.Cursor = System.Windows.Forms.Cursors.Default;
-            this.zflInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zflInhalt.Location = new System.Drawing.Point(0, 0);
-            this.zflInhalt.Margin = new System.Windows.Forms.Padding(5);
-            this.zflInhalt.MarkierteLinie = null;
-            this.zflInhalt.Name = "zflInhalt";
-            this.zflInhalt.Size = new System.Drawing.Size(1129, 495);
-            this.zflInhalt.TabIndex = 0;
-            this.zflInhalt.WiedergabeZeit = 0;
-            this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
-            this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
-            this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
-            this.zflInhalt.WiedergabeGestoppt += new System.EventHandler(this.zflInhalt_WiedergabeGestoppt);
-            // 
-            // zazSkala
-            // 
-            this.zazSkala.AutoSize = true;
-            this.zazSkala.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.zazSkala.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.zazSkala.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.zazSkala.Location = new System.Drawing.Point(0, 495);
-            this.zazSkala.Margin = new System.Windows.Forms.Padding(4);
-            this.zazSkala.MaxZeit = 10;
-            this.zazSkala.Name = "zazSkala";
-            this.zazSkala.Size = new System.Drawing.Size(1129, 96);
-            this.zazSkala.TabIndex = 1;
-            this.zazSkala.Visible = false;
-            this.zazSkala.Zeitwert = 0;
-            this.zazSkala.SliderBewegt += new System.EventHandler(this.zazSkala_SliderBewegt);
             // 
             // sfdDatei
             // 
@@ -383,11 +353,54 @@ namespace Motion_Teach_In
             this.tmrWiedergabe.Interval = 250;
             this.tmrWiedergabe.Tick += new System.EventHandler(this.tmrWiedergabe_Tick);
             // 
+            // splitContainerzeichenflächeundskala
+            // 
+            this.splitContainerzeichenflächeundskala.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerzeichenflächeundskala.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerzeichenflächeundskala.Name = "splitContainerzeichenflächeundskala";
+            this.splitContainerzeichenflächeundskala.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerzeichenflächeundskala.Panel1
+            // 
+            this.splitContainerzeichenflächeundskala.Panel1.Controls.Add(this.zflInhalt);
+            // 
+            // splitContainerzeichenflächeundskala.Panel2
+            // 
+            this.splitContainerzeichenflächeundskala.Panel2.Controls.Add(this.zazSkala);
+            this.splitContainerzeichenflächeundskala.Size = new System.Drawing.Size(1265, 659);
+            this.splitContainerzeichenflächeundskala.SplitterDistance = 462;
+            this.splitContainerzeichenflächeundskala.TabIndex = 0;
+            // 
+            // zflInhalt
+            // 
+            this.zflInhalt.BackColor = System.Drawing.Color.Green;
+            this.zflInhalt.ControlModus = Motion_View.Zeichenfläche.Modus.Zeichenmodus;
+            this.zflInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.zflInhalt.Location = new System.Drawing.Point(0, 0);
+            this.zflInhalt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.zflInhalt.MarkierteLinie = null;
+            this.zflInhalt.Name = "zflInhalt";
+            this.zflInhalt.Size = new System.Drawing.Size(1265, 462);
+            this.zflInhalt.TabIndex = 0;
+           
+            // 
+            // zazSkala
+            // 
+            this.zazSkala.AutoSize = true;
+            this.zazSkala.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.zazSkala.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.zazSkala.Location = new System.Drawing.Point(0, 0);
+            this.zazSkala.MaxZeit = 10;
+            this.zazSkala.Name = "zazSkala";
+            this.zazSkala.Size = new System.Drawing.Size(1265, 193);
+            this.zazSkala.TabIndex = 0;
+            this.zazSkala.Zeitwert = 0;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1427, 650);
+            this.ClientSize = new System.Drawing.Size(1597, 718);
             this.Controls.Add(this.spcInhalt);
             this.Controls.Add(this.tsToolbar);
             this.Controls.Add(this.mnuMenu);
@@ -405,11 +418,15 @@ namespace Motion_Teach_In
             this.tsToolbar.PerformLayout();
             this.spcInhalt.Panel1.ResumeLayout(false);
             this.spcInhalt.Panel2.ResumeLayout(false);
-            this.spcInhalt.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spcInhalt)).EndInit();
             this.spcInhalt.ResumeLayout(false);
             this.tlpDetails.ResumeLayout(false);
             this.tlpDetails.PerformLayout();
+            this.splitContainerzeichenflächeundskala.Panel1.ResumeLayout(false);
+            this.splitContainerzeichenflächeundskala.Panel2.ResumeLayout(false);
+            this.splitContainerzeichenflächeundskala.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerzeichenflächeundskala)).EndInit();
+            this.splitContainerzeichenflächeundskala.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -441,12 +458,13 @@ namespace Motion_Teach_In
         private System.Windows.Forms.Timer tmrWiedergabe;
         private System.Windows.Forms.Label lblLinien;
         private System.Windows.Forms.ListBox lstLinien;
-        private Zeichenfläche zflInhalt;
-        private Zeitanzeige zazSkala;
         private System.Windows.Forms.ToolStripButton tsbBewegen;
         private System.Windows.Forms.ToolStripSeparator tssWiedergabe;
         private System.Windows.Forms.ToolStripButton tsbUrsprungFestlegen;
         private System.Windows.Forms.ToolStripButton btn_robotersteuerung;
+        private System.Windows.Forms.SplitContainer splitContainerzeichenflächeundskala;
+        private Zeichenfläche zflInhalt;
+        private Zeitanzeige zazSkala;
     }
 }
 

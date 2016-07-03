@@ -282,6 +282,8 @@ namespace Motion_View
                 Invalidate();
 
                 WiedergabeGestartet?.Invoke(this, new EventArgs());
+                
+                
             }
         }
 

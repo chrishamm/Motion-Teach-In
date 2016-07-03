@@ -43,7 +43,10 @@ namespace Motion_Teach_In
         private void tsbWiedergabe_Click(object sender, EventArgs e)
         {
             zflInhalt.ControlModus = Zeichenfläche.Modus.Wiedergabemodus;
+
+            zazSkala.MaxZeit = zflInhalt.Datei.ErmittleGesamtzeit();
             zflInhalt.WiedergabeStarten();
+            
         }
 
         private void tsbStop_Click(object sender, EventArgs e)
