@@ -34,6 +34,11 @@ namespace Motion_Robot
         private double robot_breite = 100; //100mm
         private double faktor_pixel_zu_mm = 0.264583; //ein mm entspricht 0.2645 pixel
 
+        //timer 
+        private System.Threading.Timer cmdTimer;
+
+        private System.Threading.Timer posTimer;
+
         public Robotform(Datei übergebene_arbeitskopie, int höhe_orig_fläche, int breite_orig_fläche)
         {
             InitializeComponent();
@@ -55,7 +60,7 @@ namespace Motion_Robot
         {
             //ret ist eine normale Zahl, die einen Fehlercode repräsentiert
             int ret;
-
+            
             //Überprüft ob eine Verbindung zum Roboter gefunden wurde.Wenn nicht, wird die Form sofort geschlossen und es erscheint eine Benachrichtigung
             if ((ret = DobotDll.ConnectDobot()) >= (int) DobotResult.DobotResult_Error_Min)
             {
@@ -123,19 +128,21 @@ namespace Motion_Robot
         private void StartPeriodic()
         {
             //Startet Comand-Timer, wird alle 100ms aufgerungen
-            System.Windows.Forms.Timer cmdTimer = new System.Windows.Forms.Timer();
-            cmdTimer.Interval = 100;
-            cmdTimer.Tick += CmdTimer_Tick;
-            cmdTimer.Start();
+           
+            cmdTimer = new System.Threading.Timer(state => DobotDll.PeriodicTask(), null, 0, 100);
 
             //Startet Positions-Timer, wird alle 100ms aufgerufen
-            System.Windows.Forms.Timer posTimer = new System.Windows.Forms.Timer();
-            posTimer.Interval = 100;
-            posTimer.Tick += PosTimer_Tick;
-            posTimer.Start();
+            posTimer = new System.Threading.Timer(state => Positionsbestimmung(), null, 0, 100);
         }
 
         //Rechnet die Koordianten um, auf die passende Größe und von pixel auf mm
+        private void Positionsbestimmung()
+        {
+
+            DobotDll.GetPose(ref pose);
+
+
+        }
         private void Koordinaten_umrechnen()
         {
             //Errechnen der Faktoren für x und y, dazu teilen der Roboterzeichenfläche durch die Programmzeichenfläche

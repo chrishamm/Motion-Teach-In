@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Motion_Model;
 using Motion_View;
 using Motion_Robot;
+using dobottest.CPlusDll;
 
 
 namespace Motion_Teach_In
