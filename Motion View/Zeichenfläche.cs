@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using Motion_Model;
 
 namespace Motion_View
@@ -11,10 +12,13 @@ namespace Motion_View
     public partial class Zeichenfläche : UserControl
     {
         #region Fixe Werte
-        private static readonly int PunktDurchmesser = 5;   // Durchmesser für gezeichnete Punkte
+        private static readonly int PunktDurchmesser = 5;       // Durchmesser für gezeichnete Punkte
 
-        private static readonly int Loeschhoehe = 15;        // Breite des zu löschenden Rechtecks im Löschmodus
-        private static readonly int Loeschbreite = 15;       // Höhe des zu löschenden Rechtecks im Löschmodus
+        private static readonly int Loeschhoehe = 15;           // Breite des zu löschenden Rechtecks im Löschmodus
+        private static readonly int Loeschbreite = 15;          // Höhe des zu löschenden Rechtecks im Löschmodus
+
+        private static readonly int Verbindungshoehe = 25;      // Breite des bei Linienverbindungen benutzten Rechtecks zur Ermittlung der naheliegenden Punkte
+        private static readonly int Verbindungsbreite = 25;     // Breite des bei Linienverbindungen benutzten Rechtecks zur Ermittlung der naheliegenden Punkte
         #endregion
 
         public Zeichenfläche()
@@ -191,8 +195,42 @@ namespace Motion_View
         {
             if (modusAktiv)
             {
-                if (ControlModus == Modus.Ursprungsmodus)
+                if (ControlModus == Modus.Zeichenmodus)
                 {
+                    // Prüfen ob der Endpunkt der Linie mit dem Startpunkt einer anderen Linie verbunden werden kann
+                    foreach(Koordinate koordinate in datei.ErmittleRandpunkteBei(e.X - zeichnungOffset.X, e.Y - zeichnungOffset.Y, Verbindungsbreite, Verbindungshoehe))
+                    {
+                        if (koordinate.IstStartpunkt && koordinate.Linie != zeichnendeLinie)
+                        {
+                            if (MessageBox.Show(String.Format("Möchten Sie die gezeichnete Linie mit der Linie {0} beim Endpunkt zusammenführen?", datei.IndexOf(koordinate.Linie) + 1),
+                                Application.ProductName, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                var linie = koordinate.Linie;
+                                zeichnendeLinie.LinieAnhängen(linie);
+                                datei.Remove(linie);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Prüfen ob der Startpunkt der Linie mit dem Endpunkt einer anderen Linie verbunden werden kann
+                    foreach(Koordinate koordinate in datei.ErmittleRandpunkteBei(zeichnendeLinie[0].X, zeichnendeLinie[0].Y, Verbindungsbreite, Verbindungshoehe))
+                    {
+                        if (koordinate.IstEndpunkt && koordinate.Linie != zeichnendeLinie)
+                        {
+                            if (MessageBox.Show(String.Format("Möchten Sie die gezeichnete Linie mit der Linie {0} beim Startpunkt zusammenführen?", datei.IndexOf(koordinate.Linie) + 1),
+                                Application.ProductName, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                koordinate.Linie.LinieAnhängen(zeichnendeLinie);
+                                datei.Remove(zeichnendeLinie);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (ControlModus == Modus.Ursprungsmodus)
+                {
+                    // Ursprung der Datei definieren
                     datei.Ursprung.X = ursprungKoordinate.X - zeichnungOffset.X;
                     datei.Ursprung.Y = ursprungKoordinate.Y - zeichnungOffset.Y;
 
@@ -282,8 +320,6 @@ namespace Motion_View
                 Invalidate();
 
                 WiedergabeGestartet?.Invoke(this, new EventArgs());
-                
-                
             }
         }
 

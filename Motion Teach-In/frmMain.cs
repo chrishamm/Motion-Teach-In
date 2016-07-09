@@ -47,7 +47,6 @@ namespace Motion_Teach_In
 
             zazSkala.MaxZeit = zflInhalt.Datei.ErmittleGesamtzeit();
             zflInhalt.WiedergabeStarten();
-            
         }
 
         private void tsbStop_Click(object sender, EventArgs e)
@@ -130,11 +129,24 @@ namespace Motion_Teach_In
         #region Ereignisbehandlung der Zeichenfläche
         private void zflInhalt_ModusGeaendert(object sender, Zeichenfläche.Modus alterModus, Zeichenfläche.Modus neuerModus)
         {
+            // Buttons der Toolbar aktualisieren
             tsbBewegen.Checked = (neuerModus == Zeichenfläche.Modus.Bewegemodus);
             tsbZeichnenmodus.Checked = (neuerModus == Zeichenfläche.Modus.Zeichenmodus);
             tsbLoeschmodus.Checked = (neuerModus == Zeichenfläche.Modus.Loeschmodus);
-            tsbWiedergabeStarten.Checked = zazSkala.Visible = (neuerModus == Zeichenfläche.Modus.Wiedergabemodus);
+            tsbWiedergabeStarten.Checked = (neuerModus == Zeichenfläche.Modus.Wiedergabemodus);
             tsbUrsprungFestlegen.Checked = (neuerModus == Zeichenfläche.Modus.Ursprungsmodus);
+
+            // Zeitskala nur im Wiedergabemodus aktivieren
+            zazSkala.Enabled = (neuerModus == Zeichenfläche.Modus.Wiedergabemodus);
+        }
+
+        private void zflInhalt_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (zflInhalt.ControlModus == Zeichenfläche.Modus.Zeichenmodus)
+            {
+                // Im Zeichenodus die Skala aktuell halten
+                zazSkala.Zeitwert = zazSkala.MaxZeit = zflInhalt.Datei.ErmittleGesamtzeit();
+            }
         }
 
         private void zflInhalt_WiedergabeGestartet(object sender, EventArgs e)
@@ -142,7 +154,6 @@ namespace Motion_Teach_In
             tsbWiedergabeStarten.Enabled = false;
             tsbWiedergabeStoppen.Enabled = true;
 
-            zazSkala.MaxZeit = zflInhalt.Datei.ErmittleGesamtzeit();
             tmrWiedergabe.Start();
         }
 
@@ -151,7 +162,7 @@ namespace Motion_Teach_In
             tsbWiedergabeStarten.Enabled = true;
             tsbWiedergabeStoppen.Enabled = false;
 
-            zazSkala.Zeitwert = zflInhalt.WiedergabeZeit;
+            zazSkala.Zeitwert = zazSkala.MaxZeit;
             tmrWiedergabe.Stop();
         }
 
@@ -167,7 +178,7 @@ namespace Motion_Teach_In
             neueDatei.CollectionChanged += Datei_CollectionChanged;
 
             // Zeitskala anpassen
-            zazSkala.MaxZeit = zazSkala.Zeitwert = neueDatei.ErmittleGesamtzeit();
+            zazSkala.Zeitwert = zazSkala.MaxZeit = zflInhalt.Datei.ErmittleGesamtzeit();
 
             // Listbox der Linien neu füllen
             LinienAktualisieren();
@@ -228,10 +239,7 @@ namespace Motion_Teach_In
         private void mnuBeenden_Click(object sender, EventArgs e)
         {
             Close();
-           
-
         }
-
 
         // erzeugt eine neue roboterform wenn eine Bewegung aktuell vorhanden ist, wenn nicht wird Benachrichtigung ausgegeben
         private void btn_robotersteuerung_Click(object sender, EventArgs e)

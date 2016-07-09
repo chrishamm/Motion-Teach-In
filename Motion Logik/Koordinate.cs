@@ -1,12 +1,30 @@
-﻿using System.Drawing;
+﻿using System.Collections;
+using System.Drawing;
 
 namespace Motion_Model
 {
     public class Koordinate
     {
-        public int X;           // X-Koordinate
-        public int Y;           // Y-Koordinate
-        public int Zeit;        // Dauer der Bewegung vom letzten Punkt aus gesehen in ms
+        internal Linie linie;       // Referenz auf die Linie, die diese Koordinate (ggf.) enthält
+
+        public int X;               // X-Koordinate
+        public int Y;               // Y-Koordinate
+        public int Zeit;            // Dauer der Bewegung vom letzten Punkt aus gesehen in ms
+
+        public Linie Linie
+        {
+            get { return linie; }
+        }
+
+        public bool IstEndpunkt
+        {
+            get { return (linie != null && linie.LetzteKoordinate == this); }
+        }
+
+        public bool IstStartpunkt
+        {
+            get { return (linie != null && linie.Count > 0 && linie[0] == this); }
+        }
 
         public Koordinate(int x, int y, int zeit)
         {

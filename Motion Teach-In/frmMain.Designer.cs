@@ -61,7 +61,7 @@ namespace Motion_Teach_In
             this.sfdDatei = new System.Windows.Forms.SaveFileDialog();
             this.ofdDatei = new System.Windows.Forms.OpenFileDialog();
             this.tmrWiedergabe = new System.Windows.Forms.Timer(this.components);
-            this.splitContainerzeichenflächeundskala = new System.Windows.Forms.SplitContainer();
+            this.tlpInhalt = new System.Windows.Forms.TableLayoutPanel();
             this.zflInhalt = new Motion_View.Zeichenfläche();
             this.zazSkala = new Motion_View.Zeitanzeige();
             this.mnuMenu.SuspendLayout();
@@ -71,10 +71,7 @@ namespace Motion_Teach_In
             this.spcInhalt.Panel2.SuspendLayout();
             this.spcInhalt.SuspendLayout();
             this.tlpDetails.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerzeichenflächeundskala)).BeginInit();
-            this.splitContainerzeichenflächeundskala.Panel1.SuspendLayout();
-            this.splitContainerzeichenflächeundskala.Panel2.SuspendLayout();
-            this.splitContainerzeichenflächeundskala.SuspendLayout();
+            this.tlpInhalt.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMenu
@@ -86,8 +83,7 @@ namespace Motion_Teach_In
             this.mnuHilfe});
             this.mnuMenu.Location = new System.Drawing.Point(0, 0);
             this.mnuMenu.Name = "mnuMenu";
-            this.mnuMenu.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.mnuMenu.Size = new System.Drawing.Size(1597, 28);
+            this.mnuMenu.Size = new System.Drawing.Size(1198, 24);
             this.mnuMenu.TabIndex = 2;
             this.mnuMenu.Text = "menuStrip1";
             // 
@@ -101,7 +97,7 @@ namespace Motion_Teach_In
             this.tssDatei,
             this.mnuBeenden});
             this.mnuDatei.Name = "mnuDatei";
-            this.mnuDatei.Size = new System.Drawing.Size(57, 24);
+            this.mnuDatei.Size = new System.Drawing.Size(46, 20);
             this.mnuDatei.Text = "Datei";
             // 
             // mnuNeu
@@ -109,7 +105,7 @@ namespace Motion_Teach_In
             this.mnuNeu.Image = ((System.Drawing.Image)(resources.GetObject("mnuNeu.Image")));
             this.mnuNeu.Name = "mnuNeu";
             this.mnuNeu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.mnuNeu.Size = new System.Drawing.Size(353, 26);
+            this.mnuNeu.Size = new System.Drawing.Size(291, 22);
             this.mnuNeu.Text = "Neu";
             this.mnuNeu.Click += new System.EventHandler(this.mnuNeu_Click);
             // 
@@ -118,7 +114,7 @@ namespace Motion_Teach_In
             this.mnuÖffnen.Image = ((System.Drawing.Image)(resources.GetObject("mnuÖffnen.Image")));
             this.mnuÖffnen.Name = "mnuÖffnen";
             this.mnuÖffnen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuÖffnen.Size = new System.Drawing.Size(353, 26);
+            this.mnuÖffnen.Size = new System.Drawing.Size(291, 22);
             this.mnuÖffnen.Text = "Öffnen";
             this.mnuÖffnen.Click += new System.EventHandler(this.mnuÖffnen_Click);
             // 
@@ -127,7 +123,7 @@ namespace Motion_Teach_In
             this.mnuSpeichern.Image = ((System.Drawing.Image)(resources.GetObject("mnuSpeichern.Image")));
             this.mnuSpeichern.Name = "mnuSpeichern";
             this.mnuSpeichern.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSpeichern.Size = new System.Drawing.Size(353, 26);
+            this.mnuSpeichern.Size = new System.Drawing.Size(291, 22);
             this.mnuSpeichern.Text = "Speichern";
             this.mnuSpeichern.Click += new System.EventHandler(this.mnuSpeichern_Click);
             // 
@@ -136,20 +132,20 @@ namespace Motion_Teach_In
             this.mnuSpeichernUnter.Name = "mnuSpeichernUnter";
             this.mnuSpeichernUnter.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.mnuSpeichernUnter.Size = new System.Drawing.Size(353, 26);
+            this.mnuSpeichernUnter.Size = new System.Drawing.Size(291, 22);
             this.mnuSpeichernUnter.Text = "Speichern unter...";
             this.mnuSpeichernUnter.Click += new System.EventHandler(this.mnuSpeichernUnter_Click);
             // 
             // tssDatei
             // 
             this.tssDatei.Name = "tssDatei";
-            this.tssDatei.Size = new System.Drawing.Size(350, 6);
+            this.tssDatei.Size = new System.Drawing.Size(288, 6);
             // 
             // mnuBeenden
             // 
             this.mnuBeenden.Name = "mnuBeenden";
             this.mnuBeenden.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
-            this.mnuBeenden.Size = new System.Drawing.Size(353, 26);
+            this.mnuBeenden.Size = new System.Drawing.Size(291, 22);
             this.mnuBeenden.Text = "Beenden";
             this.mnuBeenden.Click += new System.EventHandler(this.mnuBeenden_Click);
             // 
@@ -158,14 +154,14 @@ namespace Motion_Teach_In
             this.mnuTransfer.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuGCodeErzeugen});
             this.mnuTransfer.Name = "mnuTransfer";
-            this.mnuTransfer.Size = new System.Drawing.Size(74, 24);
+            this.mnuTransfer.Size = new System.Drawing.Size(62, 20);
             this.mnuTransfer.Text = "Transfer";
             // 
             // mnuGCodeErzeugen
             // 
             this.mnuGCodeErzeugen.Enabled = false;
             this.mnuGCodeErzeugen.Name = "mnuGCodeErzeugen";
-            this.mnuGCodeErzeugen.Size = new System.Drawing.Size(200, 26);
+            this.mnuGCodeErzeugen.Size = new System.Drawing.Size(166, 22);
             this.mnuGCodeErzeugen.Text = "G-Code erzeugen";
             // 
             // mnuHilfe
@@ -173,14 +169,14 @@ namespace Motion_Teach_In
             this.mnuHilfe.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuÜber});
             this.mnuHilfe.Name = "mnuHilfe";
-            this.mnuHilfe.Size = new System.Drawing.Size(53, 24);
+            this.mnuHilfe.Size = new System.Drawing.Size(44, 20);
             this.mnuHilfe.Text = "Hilfe";
             // 
             // mnuÜber
             // 
             this.mnuÜber.Enabled = false;
             this.mnuÜber.Name = "mnuÜber";
-            this.mnuÜber.Size = new System.Drawing.Size(116, 26);
+            this.mnuÜber.Size = new System.Drawing.Size(99, 22);
             this.mnuÜber.Text = "Über";
             // 
             // tsToolbar
@@ -196,9 +192,9 @@ namespace Motion_Teach_In
             this.tssWiedergabe,
             this.tsbUrsprungFestlegen,
             this.btn_robotersteuerung});
-            this.tsToolbar.Location = new System.Drawing.Point(0, 28);
+            this.tsToolbar.Location = new System.Drawing.Point(0, 24);
             this.tsToolbar.Name = "tsToolbar";
-            this.tsToolbar.Size = new System.Drawing.Size(1597, 31);
+            this.tsToolbar.Size = new System.Drawing.Size(1198, 31);
             this.tsToolbar.TabIndex = 3;
             this.tsToolbar.Text = "Toolbar";
             // 
@@ -207,7 +203,7 @@ namespace Motion_Teach_In
             this.tsbBewegen.Image = ((System.Drawing.Image)(resources.GetObject("tsbBewegen.Image")));
             this.tsbBewegen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbBewegen.Name = "tsbBewegen";
-            this.tsbBewegen.Size = new System.Drawing.Size(98, 28);
+            this.tsbBewegen.Size = new System.Drawing.Size(83, 28);
             this.tsbBewegen.Text = "Bewegen";
             this.tsbBewegen.Click += new System.EventHandler(this.tsbBewegen_Click);
             // 
@@ -219,7 +215,7 @@ namespace Motion_Teach_In
             this.tsbZeichnenmodus.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbZeichnenmodus.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbZeichnenmodus.Name = "tsbZeichnenmodus";
-            this.tsbZeichnenmodus.Size = new System.Drawing.Size(97, 28);
+            this.tsbZeichnenmodus.Size = new System.Drawing.Size(84, 28);
             this.tsbZeichnenmodus.Text = "Zeichnen";
             this.tsbZeichnenmodus.Click += new System.EventHandler(this.tsbZeichnenmodus_Click);
             // 
@@ -228,7 +224,7 @@ namespace Motion_Teach_In
             this.tsbLoeschmodus.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoeschmodus.Image")));
             this.tsbLoeschmodus.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbLoeschmodus.Name = "tsbLoeschmodus";
-            this.tsbLoeschmodus.Size = new System.Drawing.Size(90, 28);
+            this.tsbLoeschmodus.Size = new System.Drawing.Size(79, 28);
             this.tsbLoeschmodus.Text = "Löschen";
             this.tsbLoeschmodus.Click += new System.EventHandler(this.tsbLoeschmodus_Click);
             // 
@@ -242,7 +238,7 @@ namespace Motion_Teach_In
             this.tsbWiedergabeStarten.Image = ((System.Drawing.Image)(resources.GetObject("tsbWiedergabeStarten.Image")));
             this.tsbWiedergabeStarten.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbWiedergabeStarten.Name = "tsbWiedergabeStarten";
-            this.tsbWiedergabeStarten.Size = new System.Drawing.Size(168, 28);
+            this.tsbWiedergabeStarten.Size = new System.Drawing.Size(137, 28);
             this.tsbWiedergabeStarten.Text = "Wiedergabe starten";
             this.tsbWiedergabeStarten.Click += new System.EventHandler(this.tsbWiedergabe_Click);
             // 
@@ -252,7 +248,7 @@ namespace Motion_Teach_In
             this.tsbWiedergabeStoppen.Image = ((System.Drawing.Image)(resources.GetObject("tsbWiedergabeStoppen.Image")));
             this.tsbWiedergabeStoppen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbWiedergabeStoppen.Name = "tsbWiedergabeStoppen";
-            this.tsbWiedergabeStoppen.Size = new System.Drawing.Size(177, 28);
+            this.tsbWiedergabeStoppen.Size = new System.Drawing.Size(144, 28);
             this.tsbWiedergabeStoppen.Text = "Wiedergabe stoppen";
             this.tsbWiedergabeStoppen.Click += new System.EventHandler(this.tsbStop_Click);
             // 
@@ -266,7 +262,7 @@ namespace Motion_Teach_In
             this.tsbUrsprungFestlegen.Image = ((System.Drawing.Image)(resources.GetObject("tsbUrsprungFestlegen.Image")));
             this.tsbUrsprungFestlegen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbUrsprungFestlegen.Name = "tsbUrsprungFestlegen";
-            this.tsbUrsprungFestlegen.Size = new System.Drawing.Size(162, 28);
+            this.tsbUrsprungFestlegen.Size = new System.Drawing.Size(135, 28);
             this.tsbUrsprungFestlegen.Text = "Ursprung festlegen";
             this.tsbUrsprungFestlegen.Click += new System.EventHandler(this.tsbUrsprungFestlegen_Click);
             // 
@@ -275,15 +271,14 @@ namespace Motion_Teach_In
             this.btn_robotersteuerung.Image = ((System.Drawing.Image)(resources.GetObject("btn_robotersteuerung.Image")));
             this.btn_robotersteuerung.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btn_robotersteuerung.Name = "btn_robotersteuerung";
-            this.btn_robotersteuerung.Size = new System.Drawing.Size(156, 28);
+            this.btn_robotersteuerung.Size = new System.Drawing.Size(130, 28);
             this.btn_robotersteuerung.Text = "Robotersteuerung";
             this.btn_robotersteuerung.Click += new System.EventHandler(this.btn_robotersteuerung_Click);
             // 
             // spcInhalt
             // 
             this.spcInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spcInhalt.Location = new System.Drawing.Point(0, 59);
-            this.spcInhalt.Margin = new System.Windows.Forms.Padding(4);
+            this.spcInhalt.Location = new System.Drawing.Point(0, 55);
             this.spcInhalt.Name = "spcInhalt";
             // 
             // spcInhalt.Panel1
@@ -292,11 +287,10 @@ namespace Motion_Teach_In
             // 
             // spcInhalt.Panel2
             // 
-            this.spcInhalt.Panel2.Controls.Add(this.splitContainerzeichenflächeundskala);
-            this.spcInhalt.Panel2.Margin = new System.Windows.Forms.Padding(0, 68, 0, 0);
-            this.spcInhalt.Size = new System.Drawing.Size(1597, 659);
-            this.spcInhalt.SplitterDistance = 327;
-            this.spcInhalt.SplitterWidth = 5;
+            this.spcInhalt.Panel2.Controls.Add(this.tlpInhalt);
+            this.spcInhalt.Panel2.Margin = new System.Windows.Forms.Padding(0, 55, 0, 0);
+            this.spcInhalt.Size = new System.Drawing.Size(1198, 528);
+            this.spcInhalt.SplitterDistance = 245;
             this.spcInhalt.TabIndex = 4;
             // 
             // tlpDetails
@@ -307,21 +301,19 @@ namespace Motion_Teach_In
             this.tlpDetails.Controls.Add(this.lstLinien, 0, 1);
             this.tlpDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpDetails.Location = new System.Drawing.Point(0, 0);
-            this.tlpDetails.Margin = new System.Windows.Forms.Padding(4);
             this.tlpDetails.Name = "tlpDetails";
             this.tlpDetails.RowCount = 2;
             this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDetails.Size = new System.Drawing.Size(327, 659);
+            this.tlpDetails.Size = new System.Drawing.Size(245, 528);
             this.tlpDetails.TabIndex = 0;
             // 
             // lblLinien
             // 
             this.lblLinien.AutoSize = true;
-            this.lblLinien.Location = new System.Drawing.Point(4, 0);
-            this.lblLinien.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLinien.Location = new System.Drawing.Point(3, 0);
             this.lblLinien.Name = "lblLinien";
-            this.lblLinien.Size = new System.Drawing.Size(108, 17);
+            this.lblLinien.Size = new System.Drawing.Size(81, 13);
             this.lblLinien.TabIndex = 0;
             this.lblLinien.Text = "Linienübersicht:";
             // 
@@ -330,11 +322,10 @@ namespace Motion_Teach_In
             this.lstLinien.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstLinien.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lstLinien.FormattingEnabled = true;
-            this.lstLinien.ItemHeight = 25;
-            this.lstLinien.Location = new System.Drawing.Point(4, 21);
-            this.lstLinien.Margin = new System.Windows.Forms.Padding(4);
+            this.lstLinien.ItemHeight = 20;
+            this.lstLinien.Location = new System.Drawing.Point(3, 16);
             this.lstLinien.Name = "lstLinien";
-            this.lstLinien.Size = new System.Drawing.Size(319, 634);
+            this.lstLinien.Size = new System.Drawing.Size(239, 509);
             this.lstLinien.TabIndex = 1;
             this.lstLinien.SelectedIndexChanged += new System.EventHandler(this.lstLinien_SelectedIndexChanged);
             this.lstLinien.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstLinien_KeyDown);
@@ -353,61 +344,65 @@ namespace Motion_Teach_In
             this.tmrWiedergabe.Interval = 250;
             this.tmrWiedergabe.Tick += new System.EventHandler(this.tmrWiedergabe_Tick);
             // 
-            // splitContainerzeichenflächeundskala
+            // tlpInhalt
             // 
-            this.splitContainerzeichenflächeundskala.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerzeichenflächeundskala.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerzeichenflächeundskala.Name = "splitContainerzeichenflächeundskala";
-            this.splitContainerzeichenflächeundskala.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainerzeichenflächeundskala.Panel1
-            // 
-            this.splitContainerzeichenflächeundskala.Panel1.Controls.Add(this.zflInhalt);
-            // 
-            // splitContainerzeichenflächeundskala.Panel2
-            // 
-            this.splitContainerzeichenflächeundskala.Panel2.Controls.Add(this.zazSkala);
-            this.splitContainerzeichenflächeundskala.Size = new System.Drawing.Size(1265, 659);
-            this.splitContainerzeichenflächeundskala.SplitterDistance = 462;
-            this.splitContainerzeichenflächeundskala.TabIndex = 0;
+            this.tlpInhalt.ColumnCount = 1;
+            this.tlpInhalt.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpInhalt.Controls.Add(this.zazSkala, 0, 0);
+            this.tlpInhalt.Controls.Add(this.zflInhalt, 0, 0);
+            this.tlpInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpInhalt.Location = new System.Drawing.Point(0, 0);
+            this.tlpInhalt.Name = "tlpInhalt";
+            this.tlpInhalt.RowCount = 1;
+            this.tlpInhalt.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpInhalt.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpInhalt.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpInhalt.Size = new System.Drawing.Size(949, 528);
+            this.tlpInhalt.TabIndex = 0;
             // 
             // zflInhalt
             // 
             this.zflInhalt.BackColor = System.Drawing.Color.Green;
             this.zflInhalt.ControlModus = Motion_View.Zeichenfläche.Modus.Zeichenmodus;
             this.zflInhalt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zflInhalt.Location = new System.Drawing.Point(0, 0);
-            this.zflInhalt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.zflInhalt.Location = new System.Drawing.Point(3, 3);
             this.zflInhalt.MarkierteLinie = null;
             this.zflInhalt.Name = "zflInhalt";
-            this.zflInhalt.Size = new System.Drawing.Size(1265, 462);
-            this.zflInhalt.TabIndex = 0;
-           
+            this.zflInhalt.Size = new System.Drawing.Size(943, 440);
+            this.zflInhalt.TabIndex = 6;
+            this.zflInhalt.WiedergabeZeit = 0;
+            this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
+            this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
+            this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
+            this.zflInhalt.WiedergabeGestoppt += new System.EventHandler(this.zflInhalt_WiedergabeGestoppt);
+            this.zflInhalt.MouseUp += new System.Windows.Forms.MouseEventHandler(this.zflInhalt_MouseUp);
             // 
             // zazSkala
             // 
             this.zazSkala.AutoSize = true;
             this.zazSkala.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.zazSkala.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zazSkala.Location = new System.Drawing.Point(0, 0);
+            this.zazSkala.Enabled = false;
+            this.zazSkala.Location = new System.Drawing.Point(2, 448);
+            this.zazSkala.Margin = new System.Windows.Forms.Padding(2);
             this.zazSkala.MaxZeit = 10;
             this.zazSkala.Name = "zazSkala";
-            this.zazSkala.Size = new System.Drawing.Size(1265, 193);
-            this.zazSkala.TabIndex = 0;
+            this.zazSkala.Size = new System.Drawing.Size(945, 78);
+            this.zazSkala.TabIndex = 7;
             this.zazSkala.Zeitwert = 0;
+            this.zazSkala.SliderBewegt += new System.EventHandler(this.zazSkala_SliderBewegt);
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1597, 718);
+            this.ClientSize = new System.Drawing.Size(1198, 583);
             this.Controls.Add(this.spcInhalt);
             this.Controls.Add(this.tsToolbar);
             this.Controls.Add(this.mnuMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuMenu;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(847, 580);
+            this.MinimumSize = new System.Drawing.Size(639, 478);
             this.Name = "frmMain";
             this.Text = "Motion Teach-In";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
@@ -422,11 +417,8 @@ namespace Motion_Teach_In
             this.spcInhalt.ResumeLayout(false);
             this.tlpDetails.ResumeLayout(false);
             this.tlpDetails.PerformLayout();
-            this.splitContainerzeichenflächeundskala.Panel1.ResumeLayout(false);
-            this.splitContainerzeichenflächeundskala.Panel2.ResumeLayout(false);
-            this.splitContainerzeichenflächeundskala.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerzeichenflächeundskala)).EndInit();
-            this.splitContainerzeichenflächeundskala.ResumeLayout(false);
+            this.tlpInhalt.ResumeLayout(false);
+            this.tlpInhalt.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -462,9 +454,9 @@ namespace Motion_Teach_In
         private System.Windows.Forms.ToolStripSeparator tssWiedergabe;
         private System.Windows.Forms.ToolStripButton tsbUrsprungFestlegen;
         private System.Windows.Forms.ToolStripButton btn_robotersteuerung;
-        private System.Windows.Forms.SplitContainer splitContainerzeichenflächeundskala;
-        private Zeichenfläche zflInhalt;
+        private System.Windows.Forms.TableLayoutPanel tlpInhalt;
         private Zeitanzeige zazSkala;
+        private Zeichenfläche zflInhalt;
     }
 }
 

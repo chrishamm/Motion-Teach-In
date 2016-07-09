@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace Motion_View
         static readonly int minLabelGroesse = 40;       // in px. Gibt die minimale Breite eines Labels an
 
         // Gibt den maximalen Zeitwert an oder setzt diesen
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public int MaxZeit
         {
             get { return slider.Maximum; }
@@ -50,6 +52,7 @@ namespace Motion_View
         }
 
         // Gibt den aktuell gesetzten Zeitwert an oder setzt diesen
+        [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public int Zeitwert
         {
             get { return slider.Value; }

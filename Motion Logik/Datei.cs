@@ -2,6 +2,8 @@
 using System.Data.SQLite;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Data.Entity.Core.Common;
 
 // Datei-Klasse zur logischen Abbildung eines Projekts
 //
@@ -200,6 +202,30 @@ namespace Motion_Model
             return zeit;
         }
 
+        // Ermittle alle Start- und Endpunkte im Rechteck um (x, y) mit der Größe (dx, dy)
+        public List<Koordinate> ErmittleRandpunkteBei(int x, int y, int dx, int dy)
+        {
+            int min_x = x - dx / 2;
+            int max_x = x + dx / 2;
+            int min_y = y - dy / 2;
+            int max_y = y + dy / 2;
+
+            List<Koordinate> punkte = new List<Koordinate>();
+            foreach (Linie linie in this)
+            {
+                foreach (Koordinate koord in linie)
+                {
+                    if (koord.X >= min_x && koord.X <= max_x &&
+                        koord.Y >= min_y && koord.Y <= max_y &&
+                        (koord.IstStartpunkt || koord.IstEndpunkt))
+                    {
+                        punkte.Add(koord);
+                    }
+                }
+            }
+            return punkte;
+        }
+
         // Lösche alle Punkte im Rechteck lb x lh um den Punkt x, y
         // Liefert true zurück, wenn Punkte gelöscht worden sind
         public bool LoescheBei(int x, int y, int lb, int lh)
@@ -217,30 +243,28 @@ namespace Motion_Model
                 for(int k = this[i].Count - 1; k >= 0; k--)
                 {
                     Koordinate koord = this[i][k];
-                    if (koord.X >= min_x && koord.X <= max_x)
+                    if (koord.X >= min_x && koord.X <= max_x &&
+                        koord.Y >= min_y && koord.Y <= max_y)
                     {
-                        if (koord.Y >= min_y && koord.Y <= max_y)
+                        // Soll ein Punkt innerhalb einer Linie gelöscht werden, dann soll die Linie in zwei Teile aufgeteilt werden
+                        if (k != 0 && k != this[i].Count - 1)
                         {
-                            // Soll ein Punkt innerhalb einer Linie gelöscht werden, dann soll die Linie in zwei Teile aufgeteilt werden
-                            if (k != 0 && k != this[i].Count - 1)
+                            // Es soll in einer Linie gelöscht werden. Diese einfach aufteilen
+                            Linie linie = new Linie();
+                            for (int l = this[i].Count - 1; l > k; l--)
                             {
-                                // Es soll in einer Linie gelöscht werden. Diese einfach aufteilen
-                                Linie linie = new Linie();
-                                for (int l = this[i].Count - 1; l > k; l--)
-                                {
-                                    linie.Add(this[i][l]);
-                                    this[i].RemoveAt(l);
-                                }
-
-                                // Neue Linie hinter dieser einfügen
-                                this.Insert(i + 1, linie);
-                                break;
+                                linie.Add(this[i][l]);
+                                this[i].RemoveAt(l);
                             }
 
-                            // Punkt befindet sich inenrhalb des angegebenen Rechtecks, also löschen
-                            this[i].RemoveAt(k);
-                            punkteGeloescht = true;
+                            // Neue Linie hinter dieser einfügen
+                            this.Insert(i + 1, linie);
+                            break;
                         }
+
+                        // Punkt befindet sich inenrhalb des angegebenen Rechtecks, also löschen
+                        this[i].RemoveAt(k);
+                        punkteGeloescht = true;
                     }
                 }
 
