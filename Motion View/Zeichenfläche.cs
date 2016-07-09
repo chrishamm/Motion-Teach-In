@@ -353,6 +353,12 @@ namespace Motion_View
 
             set
             {
+                // Sollte niemals passieren, aber leider setzt der Designer trotz Attributen diese Eigenschaft immer wieder...
+                if (datei == null)
+                {
+                    return;
+                }
+
                 // Wiedergabeparameter zurücksetzen
                 akkumulierteZeitTotal = 0;
                 numWiedergegebeneLinien = 0;

@@ -370,7 +370,6 @@ namespace Motion_Teach_In
             this.zflInhalt.Name = "zflInhalt";
             this.zflInhalt.Size = new System.Drawing.Size(943, 440);
             this.zflInhalt.TabIndex = 6;
-            this.zflInhalt.WiedergabeZeit = 0;
             this.zflInhalt.ModusGeaendert += new Motion_View.Zeichenfläche.ModusGeaendertEvent(this.zflInhalt_ModusGeaendert);
             this.zflInhalt.DateiGeaendert += new Motion_View.Zeichenfläche.DateiGeaendertEvent(this.zflInhalt_DateiGeaendert);
             this.zflInhalt.WiedergabeGestartet += new System.EventHandler(this.zflInhalt_WiedergabeGestartet);
