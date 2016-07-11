@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace DobotClientDemo.CPlusDll
+namespace dobottest.CPlusDll
 {
     public class DobotDll
     {
